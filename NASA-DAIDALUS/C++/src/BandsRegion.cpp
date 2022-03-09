@@ -18,18 +18,18 @@ namespace larcfm {
 
 BandsRegion::Region BandsRegion::valueOf(const std::string& s) {
   if (equals(s,"NONE")) return NONE;
-  if (equals(s,"FAR")) return FAR;
+  if (equals(s,"FAR")) return FAR_;
   if (equals(s,"MID")) return MID;
-  if (equals(s,"NEAR")) return NEAR;
+  if (equals(s,"NEAR")) return NEAR_;
   if (equals(s,"RECOVERY")) return RECOVERY;
   return UNKNOWN;
 }
 
 std::string BandsRegion::to_string(Region region) {
   if (region == NONE) return "NONE";
-  if (region == FAR) return "FAR";
+  if (region == FAR_) return "FAR";
   if (region == MID) return "MID";
-  if (region == NEAR) return "NEAR";
+  if (region == NEAR_) return "NEAR";
   if (region == RECOVERY) return "RECOVERY";
   return "UNKNOWN";
 }
@@ -52,9 +52,9 @@ bool BandsRegion::isConflictBand(Region region) {
 int BandsRegion::orderOfRegion(Region region) {
   switch (region) {
   case NONE: return 0;
-  case FAR: return 1;
+  case FAR_: return 1;
   case MID: return 2;
-  case NEAR: return 3;
+  case NEAR_: return 3;
   case RECOVERY: return 4;
   default: return -1;
   }
@@ -79,9 +79,9 @@ int BandsRegion::orderOfConflictRegion(Region region) {
 BandsRegion::Region BandsRegion::regionFromOrder(int i) {
   switch (i) {
   case 0: return NONE;
-  case 1: return FAR;
+  case 1: return FAR_;
   case 2: return MID;
-  case 3: return NEAR;
+  case 3: return NEAR_;
   case 4: return RECOVERY;
   default: return UNKNOWN;
   }

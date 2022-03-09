@@ -14,10 +14,10 @@ CXXFLAGS = $(INCLUDEFLAGS) -Wall -O
 all: clean lib examples
 
 lib: $(OBJS)
-	@echo "** Building lib/$(RELEASE).a library"
+	@echo "** Building lib/$(RELEASE).lib library"
 	@test -d lib || mkdir lib
-	@ar -cr lib/$(RELEASE).a $(OBJS) && ranlib lib/$(RELEASE).a
-	@cd lib;ln -sf $(RELEASE).a $(VERSION).a
+	@ar -cr lib/$(RELEASE).lib $(OBJS) && ranlib lib/$(RELEASE).lib
+	@cd lib;ln -sf $(RELEASE).lib $(VERSION).lib
 
 examples: 
 	@echo "** Building example applications"

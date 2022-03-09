@@ -276,7 +276,7 @@ const double Units::gn = _FormalATM_gn();
 const double Units::G = Units::getFactor("G");
 
 const double Units::newton = Units::getFactor("newton");
-const double Units::pascal = Units::getFactor("pascal");
+const double Units::pascal_ = Units::getFactor("pascal");
 
 const double Units::P0 = _FormalATM_P0();
 const double Units::atm = Units::getFactor("atm");

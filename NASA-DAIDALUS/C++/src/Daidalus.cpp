@@ -199,7 +199,7 @@ void Daidalus::set_Buffered_WC_DO_365(bool type) {
 void Daidalus::set_CD3D() {
   clearAlerters();
   addAlerter(Alerter::CD3D_SingleBands());
-  setCorrectiveRegion(BandsRegion::NEAR);
+  setCorrectiveRegion(BandsRegion::NEAR_);
   setInstantaneousBands();
   setCollisionAvoidanceBands(true);
   setCollisionAvoidanceBandsFactor(0.1);
@@ -213,7 +213,7 @@ void Daidalus::set_TCASII() {
   clearAlerters();
   addAlerter(Alerter::TCASII());
   setLookaheadTime(60);
-  setCorrectiveRegion(BandsRegion::NEAR);
+  setCorrectiveRegion(BandsRegion::NEAR_);
   setKinematicBands(true);
   setVerticalRate(1500,"fpm");
   setCollisionAvoidanceBands(true);

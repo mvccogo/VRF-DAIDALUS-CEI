@@ -452,7 +452,7 @@ public:
 	static const double newton;
 
 	/** pascal, a unit of pressure */
-	static const double pascal;
+	static const double pascal_;
 	/** pascal, unit of pressure, defined as a newton per meter squared */
 	static const double Pa;
 	/**

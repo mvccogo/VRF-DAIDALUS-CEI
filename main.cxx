@@ -10,18 +10,21 @@
 #include "vrfobjcore/localObject.h"
 #include "luabind/out_value_policy.hpp"
 
+#include "NASA-DAIDALUS/C++/include/Daidalus.h"
+
+
 //! This class will be used to bind Lua functions to.  The example is provided for
 //! a single function, however, many functions can be added to the bind
-class AddLuaFunctionInterfaceExtension : public DtLuaScriptInterfaceExtension
+class DaidalusCEI : public DtLuaScriptInterfaceExtension
 {
 public:
    //! CTOR
-   AddLuaFunctionInterfaceExtension()
+   DaidalusCEI() : daa()
    {
    }
 
    //! DTOR
-   virtual ~AddLuaFunctionInterfaceExtension()
+   virtual ~DaidalusCEI()
    {
    }
 
@@ -29,7 +32,7 @@ public:
    static DtLuaScriptInterfaceExtension* create(void* usr)
    {
       // In this example, the usr pointer is unused.
-      return new AddLuaFunctionInterfaceExtension;
+      return new DaidalusCEI;
    }
 
    //! Called from the lua script this method will print a message
@@ -82,7 +85,7 @@ public:
    {
       // Since this initialization get called twice in some instances (due to lua table changes when loading a scenario)
       // check to make sure this is not already initialized
-      if (alreadyInitialized(L, "example"))
+      if (alreadyInitialized(L, "daidalus"))
       {
          return;
       }
@@ -95,10 +98,10 @@ public:
       luabind::module(L)
          [
             //! Use luabind to bind class functions for lua implementation
-            luabind::class_<AddLuaFunctionInterfaceExtension>("AddLuaFunctionInterfaceExtension")
+            luabind::class_<DaidalusCEI>("AddLuaFunctionInterfaceExtension")
                .def("luaExamplePrintMessage", 
-                  &AddLuaFunctionInterfaceExtension::printMessage)
-               .def("luaExampleMultiReturn", &AddLuaFunctionInterfaceExtension::multipleReturn,
+                  &DaidalusCEI::printMessage)
+               .def("luaExampleMultiReturn", &DaidalusCEI::multipleReturn,
                       luabind::pure_out_value(_3) + luabind::pure_out_value(_4))
                //! The multiple return function requires you to specify which arguments are used to return.
                //! Here, the indexes start at _2 for the first argument in the function. Our sample function
@@ -114,11 +117,12 @@ public:
       //! We want to be able to recreate this global from the plugin whenever we load.
       //! Tell the DtLuaObjectSerializer to ignore this object so that it is not saved
       //! with the scenario.
-      DtLuaObjectSerializer::instance()->addKeyToIgnore("example");
+      DtLuaObjectSerializer::instance()->addKeyToIgnore("daidalus");
    }
 
 protected:
-   DtLocalObject*   myEntity;
+   DtLocalObject*			myEntity;
+   larcfm::Daidalus			daa;
 };
 
 extern "C" {
@@ -126,8 +130,8 @@ extern "C" {
    DT_VRF_DLL_PLUGIN void DtPluginInformation(DtVrfPluginInformation& info)
    {
       info.pluginName = "DAIDALUS";
-      info.pluginDescription = "NASA's DAIDALUS SAA method implemented as a VRF plugin";
-      info.pluginVersion = "1.00";
+      info.pluginDescription = "NASA's DAIDALUS SAA/DAA method implemented as a VRF plug-in";
+      info.pluginVersion = "0.1";
       info.pluginCreator = "Matheus V. C. Cogo";
       info.pluginCreatorEmail = "matheus.cogo@unesp.br";
       info.pluginContactWebPage = "";
@@ -135,15 +139,45 @@ extern "C" {
       info.pluginContactPhone = "+55 14981830802";
    }
 
+
+   DT_VRF_DLL_PLUGIN bool DtInitializeVrfPlugin(DtCgf* cgf)
+   {
+	   return true;
+
+   }
+
    DT_VRF_DLL_PLUGIN bool DtPostInitializeVrfPlugin(DtCgf* cgf)
    {
-      DtLuaScriptInterfaceImpl::addLuaScriptInterfaceExtension(AddLuaFunctionInterfaceExtension::create, 0);
+      DtLuaScriptInterfaceImpl::addLuaScriptInterfaceExtension(DaidalusCEI::create, 0);
       return true;
    }
 
    DT_VRF_DLL_PLUGIN void DtUnloadVrfPlugin()
    {
-      DtLuaScriptInterfaceImpl::removeLuaScriptInterfaceExtension(AddLuaFunctionInterfaceExtension::create, 0);
+      DtLuaScriptInterfaceImpl::removeLuaScriptInterfaceExtension(DaidalusCEI::create, 0);
    }
 }
 
+////! This is defined for all plugins so the plugin manager can retrieve the version that this plugin was built
+////! against to use to check against the version the application is running against
+//#ifdef BUILDING_PLUGIN
+//
+//#include "vrfutil/version.h"
+//#include <vlutil/vlString.h>
+//
+//extern "C" {
+//	DT_VRF_DLL_PLUGIN void DtPluginVersion(DtString& version)
+//	{
+//		version = PLUGIN_COMPATIBLE_VERSION;
+//
+//#ifdef WIN32
+//#ifdef NDEBUG
+//		version += " Release";
+//#else
+//		version += " Debug";
+//#endif
+//#endif
+//	}
+//}
+//
+//#endif

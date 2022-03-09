@@ -59,8 +59,8 @@
       <DisableSpecificWarnings>4251;4267;4311;4312;4275;4675;4250;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(MAK_VRF);$(MAK_VRF)/lib64;$(MAK_VRF)/lib64/$(Configuration);$(MAK_VRLDIR)/lib64;$(MAK_VRLDIR)/lib64/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua5.1.lib;vrfLua.lib;luabind.lib;matrix.lib;tdbutil.lib;vlutil.lib;readerWriter.lib;tbb.lib;vrfobjcore.lib;vrfutil.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MAK_VRF);$(MAK_VRF)/lib64;$(MAK_VRF)/lib64/$(Configuration);$(MAK_VRLDIR)/lib64;$(MAK_VRLDIR)/lib64/$(Configuration);x64/Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DAIDALUS-LIB.lib;lua5.1.lib;vrfLua.lib;luabind.lib;matrix.lib;tdbutil.lib;vlutil.lib;readerWriter.lib;tbb.lib;vrfobjcore.lib;vrfutil.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
     </Link>
@@ -79,8 +79,8 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>../../lib64;../../lib64/$(Configuration);$(MAK_VRLDIR)/lib64;$(MAK_VRLDIR)/lib64/$(Configuration);/lib;/lib/$(Configuration);/lib64;/lib64/$(Configuration);/lib64;/lib64/$(Configuration);/lib64;/lib64/$(Configuration);/lib/intel64/vc14;/lib/intel64/vc14/$(Configuration);;/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua5.1.lib;vrfLua.lib;luabind.lib;matrix.lib;tdbutil.lib;vlutil.lib;readerWriter.lib;tbb.lib;vrfobjcore.lib;vrfutil.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\matheusmc\Documents\GitHub\VRF-DAIDALUS-CEI\VRF-DAIDALUS-CEI\x64\Release;$(MAK_VRF)/lib64;$(MAK_VRF)/lib64/$(Configuration);$(MAK_VRLDIR)/lib64;$(MAK_VRLDIR)/lib64/$(Configuration);/lib;/lib/$(Configuration);/lib64;/lib64/$(Configuration);/lib/intel64/vc14;/lib/intel64/vc14/$(Configuration);/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DAIDALUS-LIB.lib;lua5.1.lib;vrfLua.lib;luabind.lib;matrix.lib;tdbutil.lib;vlutil.lib;readerWriter.lib;tbb.lib;vrfobjcore.lib;vrfutil.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>

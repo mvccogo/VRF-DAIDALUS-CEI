@@ -202,7 +202,7 @@ DaidalusParameters::DaidalusParameters() : error("DaidalusParameters") {
   // Alerting logic
   ownship_centric_alerting_ = true;
 
-  corrective_region_ = BandsRegion::NEAR;
+  corrective_region_ = BandsRegion::NEAR_;
 
   init();
 }

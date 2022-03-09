@@ -28,7 +28,7 @@ public:
    * UNKNOWN : Invalid band
    */
 
-  enum Region {UNKNOWN,NONE,FAR,MID,NEAR,RECOVERY};
+  enum Region {UNKNOWN,NONE,FAR_,MID,NEAR_,RECOVERY};
 
   // Number of conflict bands (NEAR, MID, FAR)
   static const int NUMBER_OF_CONFLICT_BANDS = 3;

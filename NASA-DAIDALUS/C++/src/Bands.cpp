@@ -757,7 +757,7 @@ void Bands::toArrays(std::vector<Interval>& intervalarray, std::vector<BandsRegi
     Interval n = red.getInterval(j);
     i = order(intervalarray, n);
     intervalarray.insert(intervalarray.begin()+i,n);
-    regions.insert(regions.begin()+i,BandsRegion::NEAR);
+    regions.insert(regions.begin()+i,BandsRegion::NEAR_);
   }
 }
 
@@ -768,7 +768,7 @@ void Bands::toIntervalArray_fromIntervalSet(std::vector<Interval>& intervalarray
   for (int j=0; j < intervalset.size(); ++j) {
     Interval n = intervalset.getInterval(j);
     intervalarray.push_back(n);
-    regions.push_back(BandsRegion::NEAR);
+    regions.push_back(BandsRegion::NEAR_);
   }
 }
 
@@ -790,8 +790,8 @@ void Bands::mergeTrackBands(Bands& bands) {
     return;
   }
   IntervalSet red_bands = IntervalSet();
-  toIntervalSet_fromIntervalArray(red_bands,trackArray,trackRegionArray,BandsRegion::NEAR);
-  toIntervalSet_fromIntervalArray(red_bands,bands.trackArray,bands.trackRegionArray,BandsRegion::NEAR);
+  toIntervalSet_fromIntervalArray(red_bands,trackArray,trackRegionArray,BandsRegion::NEAR_);
+  toIntervalSet_fromIntervalArray(red_bands,bands.trackArray,bands.trackRegionArray,BandsRegion::NEAR_);
   if (conflictBands) {
     toIntervalArray_fromIntervalSet(trackArray,trackRegionArray,red_bands);
   } else {
@@ -806,8 +806,8 @@ void Bands::mergeGroundSpeedBands(Bands& bands) {
     return;
   }
   IntervalSet red_bands = IntervalSet();
-  toIntervalSet_fromIntervalArray(red_bands,groundArray,groundRegionArray,BandsRegion::NEAR);
-  toIntervalSet_fromIntervalArray(red_bands,bands.groundArray,bands.groundRegionArray,BandsRegion::NEAR);
+  toIntervalSet_fromIntervalArray(red_bands,groundArray,groundRegionArray,BandsRegion::NEAR_);
+  toIntervalSet_fromIntervalArray(red_bands,bands.groundArray,bands.groundRegionArray,BandsRegion::NEAR_);
   if (conflictBands) {
     toIntervalArray_fromIntervalSet(groundArray,groundRegionArray,red_bands);
   } else {
@@ -822,8 +822,8 @@ void Bands::mergeVerticalSpeedBands(Bands& bands) {
     return;
   }
   IntervalSet red_bands = IntervalSet();
-  toIntervalSet_fromIntervalArray(red_bands,verticalArray,verticalRegionArray,BandsRegion::NEAR);
-  toIntervalSet_fromIntervalArray(red_bands,bands.verticalArray,bands.verticalRegionArray,BandsRegion::NEAR);
+  toIntervalSet_fromIntervalArray(red_bands,verticalArray,verticalRegionArray,BandsRegion::NEAR_);
+  toIntervalSet_fromIntervalArray(red_bands,bands.verticalArray,bands.verticalRegionArray,BandsRegion::NEAR_);
   if (conflictBands) {
     toIntervalArray_fromIntervalSet(verticalArray,verticalRegionArray,red_bands);
   } else {
