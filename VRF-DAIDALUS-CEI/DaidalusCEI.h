@@ -14,8 +14,9 @@ class DaidalusCEI : public DtLuaScriptInterfaceExtension
 
 public:
 	DaidalusCEI() : daa() {
-		daa.set_DO_365A();
-
+		if (!daa.loadFromFile("daidalus_params.conf")) {
+			daa.set_DO_365A();
+		}
 	}
 
 	virtual ~DaidalusCEI() {}
@@ -26,9 +27,9 @@ public:
 
 
 	virtual void setOwnshipState(std::string ido, double lat, double lon, double alt, double vx, double vy, double vz, double to);
-	
+
 	virtual void addTrafficState(int& aci_idx, std::string idi, double lat, double lon, double alt, double vx, double vy, double vz, double to);
-	
+
 	virtual void getDetectionTime(double& time_to_violation, int ac_idx);
 
 	inline virtual void setWindVelocityTo(double vx, double vy, double vz) {
@@ -39,6 +40,45 @@ public:
 		larcfm::Velocity vel((vx, vy, vz));
 		daa.setWindVelocityFrom(vel);
 	}
+
+
+	inline virtual void setHorizontalPositionUncertainty(int ac_idx, double s_EW, double s_NS, double s_EN, const std::string& xy_units)
+	{
+		daa.setHorizontalPositionUncertainty(ac_idx, s_EW, s_NS, s_EN, xy_units);
+	}
+	inline virtual void setVerticalPositionUncertainty(int ac_idx, double sz, const std::string& z_units)
+	{
+		daa.setVerticalPositionUncertainty(ac_idx, sz, z_units);
+	}
+	inline virtual void setHorizontalVelocityUncertainty(int ac_idx, double v_EW, double v_NS, double v_EN, const std::string& vxy_units)
+	{
+		daa.setHorizontalVelocityUncertainty(ac_idx, v_EW, v_NS, v_EN, vxy_units);
+	}
+	inline virtual void setVerticalSpeedUncertainty(int ac_idx, double vz, const std::string& vz_units)
+	{
+		daa.setVerticalSpeedUncertainty(ac_idx, vz, vz_units);
+	}
+
+	inline virtual void aircraftIndex(int& ac_idx, const std::string& id)
+	{
+		ac_idx = daa.aircraftIndex(id);
+	}
+
+	inline virtual void numberOfAircraft(int& no)
+	{
+		no = daa.numberOfAircraft();
+	}
+
+	inline virtual void lastTrafficIndex(int& index)
+	{
+		index = daa.lastTrafficIndex();
+	}
+
+	inline virtual void getCurrentTime(double& time)
+	{
+		time = daa.getCurrentTime();
+	}
+
 
 	virtual void printMessage(const std::string& message);
 

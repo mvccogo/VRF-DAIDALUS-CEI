@@ -91,6 +91,20 @@ void DaidalusCEI::bindLuaFunctions(DtLocalObject* entity, const DtString& script
 			luabind::pure_out_value(_2))
 		.def("setWindVelocityTo", &DaidalusCEI::setWindVelocityTo)
 		.def("setWindVelocityFrom", &DaidalusCEI::setWindVelocityFrom)
+		.def("setHorizontalPositionUncertainty", &DaidalusCEI::setHorizontalPositionUncertainty)
+		.def("setVerticalPositionUncertainty", &DaidalusCEI::setVerticalPositionUncertainty)
+		.def("setHorizontalVelocityUncertainty", &DaidalusCEI::setHorizontalVelocityUncertainty)
+		.def("setVerticalSpeedUncertainty", &DaidalusCEI::setVerticalSpeedUncertainty)
+		.def("aircraftIndex", &DaidalusCEI::aircraftIndex,
+			luabind::pure_out_value(_2))
+		.def("numberOfAircraft", &DaidalusCEI::numberOfAircraft,
+			luabind::pure_out_value(_2))
+		.def("lastTrafficIndex", &DaidalusCEI::lastTrafficIndex,
+			luabind::pure_out_value(_2))
+		.def("getCurrentTime", &DaidalusCEI::getCurrentTime,
+			luabind::pure_out_value(_2))
+
+
 		//! The multiple return function requires you to specify which arguments are used to return.
 		//! Here, the indexes start at _2 for the first argument in the function. Our sample function
 		//! has the first out value in the argument slot _3. We also have a second out argument at slot
