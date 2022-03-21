@@ -20,15 +20,78 @@ require "vrfutil"
 --    checkpointState.importantNumber = 42
 vrf:setCheckpointMode(CheckpointStateOnly)
 
--- Task Parameters Available in Script
 
+-- Possible states:
+-- Starting
+-- moving: moving to destination
+-- maneuvering: avoiding an aircraft
+
+
+myState = "starting"
+
+-- Task Parameters Available in Script
+--  taskParameters.destination Type: Location3D - Move to location destination.
+destination = taskParameters.position
 
 -- Called when the task first starts. Never called again.
 function init()
    daidalus:luaExamplePrintMessage("Starting up Daidalus")
-   -- Set the tick period for this script.
-   vrf:setTickPeriod(0.5)
+   local ret = daidalus:reloadConfig()
+   --daidalus:setHorVerNMAC(250, 100)
+   daidalus:setLookaheadTime(90.0)
+   -- Set up wind configuration
+   local loc3d = this:getLocation3D()
+   local wind_dir = vrf:getWindDirection(loc3d)
+   local wind_speed = vrf:getWindSpeed(loc3d)
    
+   local wind_vect = Vector3D(0,0,0)
+   wind_vect:setBearingInclRange(wind_dir, 0, wind_speed)
+   
+   daidalus:setWindVelocityTo(wind_vect:getEast(), wind_vect:getNorth() , -wind_vect:getDown())
+   
+   -- Set the tick period for this script.
+   vrf:setTickPeriod(0.1)
+   
+   -- Check destination 
+   if (destination == nil) then
+      printWarn("Daidalus startup: no destination?\n")
+      vrf:endTask(false)
+      return
+   end
+   
+   
+   -- Get destination altitude, then subtrack it from goal altitude if available
+   local nHAT = 0
+   local dAlt, bAvailable = vrf:getTerrainAltitude(destination:getLat(), destination:getLon())
+   
+   if (bAvailable) then
+      nHAT = destination:getAlt() - dAlt
+   end
+   
+   
+   -- Skip subordinates for now
+--~    for idx,sub in ipairs(subordinates) do
+--~       local subLocation = sub:getLocation3D()
+--~       local offset = this:getLocation3D():vectorToLoc3D(subLocation)
+
+--~       if (sub:isDestroyed() == false) then
+--~          subOffsets[sub:getUUID()] = offset;
+--~          subGoals[sub:getUUID()] = destination:addVector3D(subOffsets[sub:getUUID()]):makeCopy()
+
+--~          local goalAlt, bFound = vrf:getTerrainAltitude(subGoals[sub:getUUID()]:getLat(), subGoals[sub:getUUID()]:getLon())
+
+--~          if (bAvailable and bFound) then
+--~             goalAlt = goalAlt + nHAT
+--~          else
+--~             goalAlt = destination:getAlt()
+--~          end
+--~          
+--~          subGoals[sub:getUUID()]:setAlt(goalAlt)
+--~       end   
+--~    end
+--~    
+   
+
 end
 
 -- Called each tick while this task is active.
@@ -41,33 +104,63 @@ function tick()
    
    -- Add this object to ownship
    
-   local loc3d = this.getLocation3D(this)
-   local vel = this.getVelocity3D(this)
+   local loc3d = this:getLocation3D()
+   local vel = this:getVelocity3D()
+   local time = vrf:getSimulationTime()
    
-   daidalus:setOwnshipState(this.getName(this), loc3d.getLat(loc3d), loc3d.getLon(loc3d), loc3d.getAlt(loc3d), vel.getNorth(vel), vel.getEast(vel), vel.getDown(vel), 0)
-   
+   daidalus:setOwnshipState(this:getName(), loc3d:getLat(), loc3d:getLon(), loc3d:getAlt(), vel:getEast(), vel:getNorth(), -vel:getDown(), time)
+   daidalus:luaExamplePrintMessage("Ownship speed: ".. vel:getEast()..", "
+   ..vel:getNorth()..","..vel:getDown())
    
    local objs = vrf:getVrfObjects()
    
+   
+   -- Iterate over all simulated objects, add their traffic states.
    for i, obj in ipairs(objs) do
-      if obj.isValid(obj) == true then
-         local type = obj.getEntityType(obj)
+      if obj:isValid() == true then
+         local type = obj:getEntityType()
          type = type.sub(type, type.find(type,":")+1, type.find(type,":")+1)
-         if type == "2" and this.getUUID(this) ~= obj.getUUID(obj) then
-            local loc3d_obj = obj.getLocation3D(obj)
-            local vel_obj = obj.getVelocity3D(obj)
-            local id = daidalus:addTrafficState(obj.getName(obj), loc3d_obj.getLat(loc3d_obj), loc3d_obj.getLon(loc3d_obj), loc3d_obj.getAlt(loc3d_obj), vel_obj.getNorth(vel_obj), vel_obj.getEast(vel_obj), vel_obj.getDown(vel_obj), 0)
-            daidalus:luaExamplePrintMessage(""..obj.getName(obj))   
-      end
+         if type == "2" and this:getUUID() ~= obj:getUUID() then
+            local loc3d_obj = obj:getLocation3D()
+            local vel_obj = obj:getVelocity3D()
+            local id = daidalus:addTrafficState(obj:getName(), loc3d_obj:getLat(), loc3d_obj:getLon(), loc3d_obj:getAlt(), vel_obj:getEast(), vel_obj:getNorth(), -vel_obj:getDown(), -1)  
+            daidalus:luaExamplePrintMessage("Added this traffic state: ".. obj:getName().."lat/lon/alt: "..loc3d_obj:getLat()..","..loc3d_obj:getLon()..","..loc3d_obj:getAlt().."\n vel east/north/up: ".. vel_obj:getEast()..", "
+            ..vel_obj:getNorth()..","..vel_obj:getDown())
+            end
       
       end
 
    end
    
-   --daidalus:setOwnshipState(
+   local aircraftNo = daidalus:numberOfAircraft()
+   for i, obj in ipairs(objs) do
+      if obj:isValid() == true then
+         local id = daidalus:aircraftIndex(obj:getName())
+         if id ~= -1 and id ~= 0 then
+            local timeToConflict = daidalus:getDetectionTime(id)
+            daidalus:luaExamplePrintMessage("time to conflict with "..obj:getName()..": "..timeToConflict)
+            
+         end
+      end
+   end
    
+   if (myState == "starting") then 
+      if (this:isDestroyed() == false) and (destination ~= nil) then
+      local params = {
+            position = taskParameters.position,
+            keepAltitude = 1,
+            altitude = 304.8,
+            heading = 90,
+            keepSpeed = 0,
+            speed = 250,
+            lateralAcceleration = 1}
+
+         local taskId = vrf:startSubtask("fly_to_position_and_heading", params)
+         myState = "moving"
+      end
+   end
    
-   --vrf:endTask(true)
+   daidalus:luaExamplePrintMessage("daidalus tick: "..daidalus:getCurrentTime())
 end
 
 

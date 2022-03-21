@@ -13,8 +13,12 @@ class DaidalusCEI : public DtLuaScriptInterfaceExtension
 {
 
 public:
-	DaidalusCEI() : daa() {
-		if (!daa.loadFromFile("daidalus_params.conf")) {
+	DaidalusCEI() : daa(), bConfigFileFound(false) {
+		if (daa.loadFromFile("daidalus_params.conf")) {
+			// Default configuration parameters
+			bConfigFileFound = true;
+		}
+		else {
 			daa.set_DO_365A();
 		}
 	}
@@ -79,6 +83,16 @@ public:
 		time = daa.getCurrentTime();
 	}
 
+	inline virtual void setHorVerNMAC(double horizontal, double vertical)
+	{
+		daa.setHorizontalNMAC(horizontal);
+		daa.setVerticalNMAC(vertical);
+	}
+
+	inline virtual void setLookaheadTime(double lookahead)
+	{
+		daa.setLookaheadTime(lookahead);
+	}
 
 	virtual void printMessage(const std::string& message);
 
@@ -95,6 +109,7 @@ public:
 
 	bool alreadyInitialized(lua_State* L, const char* moduleName) const;
 
+	virtual void reloadConfig(bool& ret);
 
 	//! Binds method for this class to the lua state.  This simple method will
 	//! send an object console message to the entity that implements this task
@@ -103,7 +118,7 @@ public:
 protected:
 	DtLocalObject*			myEntity;
 	larcfm::Daidalus		daa;
-
+	bool					bConfigFileFound;
 };
 
 extern "C" {
