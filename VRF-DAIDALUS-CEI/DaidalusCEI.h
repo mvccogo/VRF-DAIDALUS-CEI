@@ -94,6 +94,8 @@ public:
 		daa.setLookaheadTime(lookahead);
 	}
 
+	virtual void getHorizontalDirectionBands();
+
 	virtual void printMessage(const std::string& message);
 
 	//! This function is an example of binding a function with multiple return values.

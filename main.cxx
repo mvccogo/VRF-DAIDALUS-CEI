@@ -120,6 +120,7 @@ void DaidalusCEI::bindLuaFunctions(DtLocalObject* entity, const DtString& script
 		.def("setLookaheadTime", &DaidalusCEI::setLookaheadTime)
 		.def("reloadConfig", &DaidalusCEI::reloadConfig,
 			luabind::pure_out_value(_2))
+		.def("getHorizontalDirectionBands", &DaidalusCEI::getHorizontalDirectionBands)
 		//! The multiple return function requires you to specify which arguments are used to return.
 		//! Here, the indexes start at _2 for the first argument in the function. Our sample function
 		//! has the first out value in the argument slot _3. We also have a second out argument at slot
@@ -143,6 +144,84 @@ void DaidalusCEI::bindLuaFunctions(DtLocalObject* entity, const DtString& script
 		printMessage("Could not load config file, defaulting to DO 365A");
 	}
 	}
+
+static std::string num2str(double res, const std::string& u) {
+	if (!ISFINITE(res)) {
+		return "N/A";
+	}
+	else {
+		return larcfm::Fm2(res) + " [" + u + "]";
+	}
+}
+
+
+void DaidalusCEI::getHorizontalDirectionBands() {
+	// Horizontal Direction
+	larcfm::TrafficState own = daa.getOwnshipState();
+	bool nowind = daa.getWindVelocityTo().isZero();
+	std::string hdstr = nowind ? "Track" : "Heading";
+	std::string hsstr = nowind ? "Ground Speed" : "Airspeed";
+
+	std::vector<std::string> acs;
+	for (int regidx = 1; regidx <= larcfm::BandsRegion::NUMBER_OF_CONFLICT_BANDS; ++regidx) {
+		larcfm::BandsRegion::Region region = larcfm::BandsRegion::regionFromOrder(regidx);
+		daa.conflictBandsAircraft(acs, region);
+		std::string s;
+		s << "Conflict Aircraft for Bands Region " << larcfm::BandsRegion::to_string(region) << ": " << larcfm::TrafficState::listToString(acs);
+		printMessage(s);
+	}
+
+	double hd_deg = own.horizontalDirection("deg");
+	std::string s;
+	s << "Ownship " << hdstr << ": " << larcfm::Fm2(hd_deg) << " [deg]";
+	s << "Region of Current " << hdstr << ": " <<
+
+		larcfm::BandsRegion::to_string(daa.regionOfHorizontalDirection(hd_deg, "deg"));
+	s << hdstr << " Bands [deg,deg]";
+	printMessage(s);
+
+	for (int i = 0; i < daa.horizontalDirectionBandsLength(); ++i) {
+		larcfm::Interval ii = daa.horizontalDirectionIntervalAt(i, "deg");
+		s.clear();
+
+		s << "  " << larcfm::BandsRegion::to_string(daa.horizontalDirectionRegionAt(i)) << ":\t" << ii.toString(2);
+		printMessage(s);
+	}
+	for (int regidx = 1; regidx <= larcfm::BandsRegion::NUMBER_OF_CONFLICT_BANDS; ++regidx) {
+		larcfm::BandsRegion::Region region = larcfm::BandsRegion::regionFromOrder(regidx);
+		daa.peripheralHorizontalDirectionBandsAircraft(acs, region);
+		s.clear();
+		s << "Peripheral Aircraft for " << hdstr << " Bands Region " << larcfm::BandsRegion::to_string(region) << ": " <<
+			larcfm::TrafficState::listToString(acs);
+		printMessage(s);
+	}
+	s.clear();
+	s << hdstr << " Resolution (right): " << num2str(daa.horizontalDirectionResolution(true, "deg"), "deg");
+	printMessage(s);
+	s.clear();
+	s << hdstr << " Resolution (left): " << num2str(daa.horizontalDirectionResolution(false, "deg"), "deg");
+	printMessage(s);
+	s.clear();
+	s << "Preferred " << hdstr << " Direction: ";
+	if (daa.preferredHorizontalDirectionRightOrLeft()) {
+		s << "right";
+	}
+	else {
+		s << "left";
+	}
+	printMessage(s);
+	s.clear();
+	s << "Recovery Information for Horizontal Speed Bands:";
+	printMessage(s);
+	larcfm::RecoveryInformation recovery = daa.horizontalDirectionRecoveryInformation();
+	std::cout << "  Time to Recovery: " <<
+		larcfm::Units::str("s", recovery.timeToRecovery()) << std::endl;
+	std::cout << "  Recovery Horizontal Distance: " <<
+		larcfm::Units::str("nmi", recovery.recoveryHorizontalDistance()) << std::endl;
+	std::cout << "  Recovery Vertical Distance: " <<
+		larcfm::Units::str("ft", recovery.recoveryVerticalDistance()) << std::endl;
+
+}
 
 
 ////! This is defined for all plugins so the plugin manager can retrieve the version that this plugin was built

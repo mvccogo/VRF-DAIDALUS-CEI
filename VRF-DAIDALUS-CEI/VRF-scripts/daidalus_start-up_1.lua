@@ -38,7 +38,7 @@ function init()
    daidalus:luaExamplePrintMessage("Starting up Daidalus")
    local ret = daidalus:reloadConfig()
    --daidalus:setHorVerNMAC(250, 100)
-   daidalus:setLookaheadTime(90.0)
+   --daidalus:setLookaheadTime(180.0)
    -- Set up wind configuration
    local loc3d = this:getLocation3D()
    local wind_dir = vrf:getWindDirection(loc3d)
@@ -47,10 +47,10 @@ function init()
    local wind_vect = Vector3D(0,0,0)
    wind_vect:setBearingInclRange(wind_dir, 0, wind_speed)
    
-   daidalus:setWindVelocityTo(wind_vect:getEast(), wind_vect:getNorth() , -wind_vect:getDown())
+   --daidalus:setWindVelocityTo(wind_vect:getEast(), wind_vect:getNorth() , -wind_vect:getDown())
    
    -- Set the tick period for this script.
-   vrf:setTickPeriod(0.1)
+   vrf:setTickPeriod(0.5)
    
    -- Check destination 
    if (destination == nil) then
@@ -109,8 +109,6 @@ function tick()
    local time = vrf:getSimulationTime()
    
    daidalus:setOwnshipState(this:getName(), loc3d:getLat(), loc3d:getLon(), loc3d:getAlt(), vel:getEast(), vel:getNorth(), -vel:getDown(), time)
-   daidalus:luaExamplePrintMessage("Ownship speed: ".. vel:getEast()..", "
-   ..vel:getNorth()..","..vel:getDown())
    
    local objs = vrf:getVrfObjects()
    
@@ -124,8 +122,6 @@ function tick()
             local loc3d_obj = obj:getLocation3D()
             local vel_obj = obj:getVelocity3D()
             local id = daidalus:addTrafficState(obj:getName(), loc3d_obj:getLat(), loc3d_obj:getLon(), loc3d_obj:getAlt(), vel_obj:getEast(), vel_obj:getNorth(), -vel_obj:getDown(), -1)  
-            daidalus:luaExamplePrintMessage("Added this traffic state: ".. obj:getName().."lat/lon/alt: "..loc3d_obj:getLat()..","..loc3d_obj:getLon()..","..loc3d_obj:getAlt().."\n vel east/north/up: ".. vel_obj:getEast()..", "
-            ..vel_obj:getNorth()..","..vel_obj:getDown())
             end
       
       end
@@ -159,7 +155,7 @@ function tick()
          myState = "moving"
       end
    end
-   
+   daidalus:getHorizontalDirectionBands()
    daidalus:luaExamplePrintMessage("daidalus tick: "..daidalus:getCurrentTime())
 end
 
