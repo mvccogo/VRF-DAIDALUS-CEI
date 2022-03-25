@@ -7,6 +7,17 @@
 #include "VRF-DAIDALUS-CEI/DaidalusCEI.h"
 
 
+void DaidalusCEI::setAlertingTime(bool& bUpdated, double time) {
+	larcfm::ParameterData param = daa.getParameterData();
+	bUpdated = param.set("alerting_time", time, "s");
+
+}
+
+void DaidalusCEI::getAlertingTime(double& time) {
+	larcfm::ParameterData param = daa.getParameterData();
+	time = param.getValue("alerting_time");
+
+}
 
 
 void DaidalusCEI::reloadConfig(bool& ret) {
@@ -98,7 +109,7 @@ void DaidalusCEI::bindLuaFunctions(DtLocalObject* entity, const DtString& script
 		.def("luaExampleMultiReturn", &DaidalusCEI::multipleReturn,
 			luabind::pure_out_value(_3) + luabind::pure_out_value(_4))
 		.def("setOwnshipState", &DaidalusCEI::setOwnshipState)
-		.def("addTrafficState", &DaidalusCEI::addTrafficState, 
+		.def("addTrafficState", &DaidalusCEI::addTrafficState,
 			luabind::pure_out_value(_2))
 		.def("getDetectionTime", &DaidalusCEI::getDetectionTime,
 			luabind::pure_out_value(_2))
@@ -121,6 +132,12 @@ void DaidalusCEI::bindLuaFunctions(DtLocalObject* entity, const DtString& script
 		.def("reloadConfig", &DaidalusCEI::reloadConfig,
 			luabind::pure_out_value(_2))
 		.def("getHorizontalDirectionBands", &DaidalusCEI::getHorizontalDirectionBands)
+		.def("setAlertingTime", &DaidalusCEI::setAlertingTime,
+			luabind::pure_out_value(_2))
+		.def("getAlertingTime", &DaidalusCEI::getAlertingTime,
+			luabind::pure_out_value(_2))
+		.def("getResolutionDirection", &DaidalusCEI::getResolutionDirection,
+			luabind::pure_out_value(_2))
 		//! The multiple return function requires you to specify which arguments are used to return.
 		//! Here, the indexes start at _2 for the first argument in the function. Our sample function
 		//! has the first out value in the argument slot _3. We also have a second out argument at slot
@@ -153,6 +170,16 @@ static std::string num2str(double res, const std::string& u) {
 		return larcfm::Fm2(res) + " [" + u + "]";
 	}
 }
+
+void DaidalusCEI::getResolutionDirection(double& trackOrHeading) {
+	if (daa.preferredHorizontalDirectionRightOrLeft()) {
+		trackOrHeading = daa.horizontalDirectionResolution(true, "deg");
+	}
+	else {
+		trackOrHeading = daa.horizontalDirectionResolution(false, "deg");
+	}
+}
+
 
 
 void DaidalusCEI::getHorizontalDirectionBands() {

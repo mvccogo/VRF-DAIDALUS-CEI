@@ -25,7 +25,7 @@ vrf:setCheckpointMode(CheckpointStateOnly)
 -- Starting
 -- moving: moving to destination
 -- maneuvering: avoiding an aircraft
-
+taskId = -1
 
 myState = "starting"
 
@@ -139,7 +139,7 @@ function tick()
          end
       end
    end
-   
+
    if (myState == "starting") then 
       if (this:isDestroyed() == false) and (destination ~= nil) then
       local params = {
@@ -151,10 +151,51 @@ function tick()
             speed = 250,
             lateralAcceleration = 1}
 
-         local taskId = vrf:startSubtask("fly_to_position_and_heading", params)
-         myState = "moving"
+         taskId = vrf:startSubtask("fly_to_position_and_heading", params)
+         myState = "moving-to-goal"
       end
    end
+   
+   if (myState == "moving-to-goal") then
+      if(this:isDestroyed() == false) then
+         local resBands = daidalus:getResolutionDirection()
+         daidalus:luaExamplePrintMessage("res. dir!!:"..resBands)
+         if (resBands == resBands) then
+            local params = {
+               allow_task_visualizations = true,
+               heading = resBands*3.1415/180,
+               use_magnetic = false,
+               turn_rate = 0.05
+            }
+            vrf:stopSubtask(taskId)
+            taskId = vrf:startSubtask("fly-heading", params)
+            myState = "avoiding-aircraft"
+         end
+      end
+   end
+   
+   if (myState == "avoiding-aircraft") then
+      if (this:isDestroyed() == false) then
+      for i, obj in ipairs(objs) do
+         if obj:isValid() == true then
+            local id = daidalus:aircraftIndex(obj:getName())
+            if id ~= -1 and id ~= 0 then
+               local timeToConflict = daidalus:getDetectionTime(id)
+               if (timeToConflict ~= 1/0) then
+                  myState = "moving-to-goal"
+               else
+                  myState = "starting"
+               end
+               
+            end
+      end
+   end
+      end
+   end
+   
+   
+   
+   
    daidalus:getHorizontalDirectionBands()
    daidalus:luaExamplePrintMessage("daidalus tick: "..daidalus:getCurrentTime())
 end

@@ -29,6 +29,10 @@ public:
 		return new DaidalusCEI;
 	}
 
+	virtual void getResolutionDirection(double& trackOrHeading);
+	virtual void setAlertingTime(bool& bUpdated, double time);
+
+	virtual void getAlertingTime(double& time);
 
 	virtual void setOwnshipState(std::string ido, double lat, double lon, double alt, double vx, double vy, double vz, double to);
 
@@ -98,15 +102,7 @@ public:
 
 	virtual void printMessage(const std::string& message);
 
-	//! This function is an example of binding a function with multiple return values.
-   //! The function call in lua itself will be similar to the following:
-   //! local stringReturn, intReturn, boolReturn = example:luaExampleMultiReturn(true)
-   //! This will result in the 3 variables having the values as such:
-   //! stringReturn = "return string", intReturn = 40, boolReturn = true
-   //! You will notice that the function call only has the first bool in it. Specifying
-   //! the other arguments will result in the function call not working since these are
-   //! out parameters only.
-   //! To see how it is bound, see the .def below.
+
 	virtual std::string multipleReturn(bool b, int& someNumber, bool& success);
 
 	bool alreadyInitialized(lua_State* L, const char* moduleName) const;
