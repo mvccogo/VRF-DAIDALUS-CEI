@@ -24,8 +24,11 @@ void DaidalusCEI::isDirectionInConflict(double& result, double direction, double
 
 	// Save all traffic
 	std::vector<larcfm::TrafficState> states;
-	for (int i = 1; i < daa.numberOfAircraft() - 1; i++) {
+	for (int i = 1; i <= daa.numberOfAircraft() - 1; i++) {
 		if (daa.getAircraftStateAt(i).isValid()) {
+			s.clear();
+			s << "found a valid aircraft, copying";
+			printMessage(s);
 			larcfm::TrafficState ts;
 			memcpy(&ts, &daa.getAircraftStateAt(i), sizeof(larcfm::TrafficState));
 			states.push_back(ts);

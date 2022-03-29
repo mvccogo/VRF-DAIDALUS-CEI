@@ -22,6 +22,8 @@ vrf:setCheckpointMode(CheckpointStateOnly)
 
 prev_heading = -1
 alerting_time = 40
+maneuvering = false
+
 -- Possible states:
 -- Starting
 -- moving: moving to destination
@@ -156,6 +158,7 @@ function tick()
             speed = 250,
             lateralAcceleration = 1}
          
+         vrf:stopSubtask(taskId)
          taskId = vrf:startSubtask("fly_to_position_and_heading", params)
          myState = "moving-to-goal"
       end
@@ -184,6 +187,9 @@ function tick()
             myState = "avoiding-aircraft"
          else
          resBands = -1
+         if maneuvering ==  true then
+            myState = "avoiding-aircraft"
+         end
          end
       end
       
@@ -206,22 +212,23 @@ function tick()
                end
             end
             daidalus:setAlertingTime(new_alerting)
-            for i, obj in ipairs(objs) do
-               if obj:isValid() == true and obj:getUUID() ~= this:getUUID() then
-                  local id = daidalus:aircraftIndex(obj:getName())
-                  if id ~= -1 then
-                     local timeToConflict = daidalus:getDetectionTime(id)
-                     if (timeToConflict ~= 1/0) then
-                        daidalus:luaExamplePrintMessage("still in conflict, maneuvering...")
-                        myState = "moving-to-goal"
-                     else
-                        myState = "starting"
-                        daidalus:luaExamplePrintMessage("not in conflict anymore...")
-                     end
-                     
+            --for i, obj in ipairs(objs) do
+               --if obj:isValid() == true and obj:getUUID() ~= this:getUUID() then
+                 -- local id = daidalus:aircraftIndex(obj:getName())
+                --  if id ~= -1 then
+                  local timeToConflict = daidalus:isDirectionInConflict(prev_heading, time)
+                  if (timeToConflict < 1e8) then
+                     daidalus:luaExamplePrintMessage("still in conflict, maneuvering...")
+                     myState = "moving-to-goal"
+                     maneuvering = true
+                  else
+                     myState = "starting"
+                     daidalus:luaExamplePrintMessage("not in conflict anymore...")
                   end
-               end
-            end
+                     
+                  --end
+               --end
+            --end
       end
    end
    
