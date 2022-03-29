@@ -7,16 +7,80 @@
 #include "VRF-DAIDALUS-CEI/DaidalusCEI.h"
 
 
+
+void DaidalusCEI::isDirectionInConflict(double& result, double direction, double time /* direction in degrees */)
+{
+	// We must set the previous direction to the ownship, add all the trafic for that state, then clean-up to the original state
+	larcfm::Position pos = daa.getOwnshipState().getPosition();
+	larcfm::Velocity vel = daa.getOwnshipState().getVelocity();
+	double gs = vel.groundSpeed("knot");
+	larcfm::Velocity vel_conflict = larcfm::Velocity::makeTrkGsVs(direction, gs, 0);
+	
+	std::string s;
+	s << "Traffic size before: ";
+	s << daa.numberOfAircraft();
+	printMessage(s);
+
+
+	// Save all traffic
+	std::vector<larcfm::TrafficState> states;
+	for (int i = 1; i < daa.numberOfAircraft() - 1; i++) {
+		if (daa.getAircraftStateAt(i).isValid()) {
+			larcfm::TrafficState ts;
+			memcpy(&ts, &daa.getAircraftStateAt(i), sizeof(larcfm::TrafficState));
+			states.push_back(ts);
+		}
+	}
+	std::string ido(daa.getOwnshipState().getId());
+	// Clear traffic by adding new ownship position
+	daa.setOwnshipState(ido, pos, vel_conflict, time);
+
+	s.clear();
+	s << "Traffic size after: ";
+	s << (int)states.size();
+	printMessage(s);
+
+
+	// Add back all traffic 
+	for (auto i : states) {
+		daa.addTrafficState(i.getId(), i.getPosition(), i.getVelocity());
+	}
+	
+	// Now, check if this direction has a conflict. 
+
+	double time_to_violation;
+	double result_temp = MAXDOUBLE;
+	for (int i = 1; i < daa.numberOfAircraft(); i++) {
+		getDetectionTime(time_to_violation, i);
+		if (time_to_violation != PINFINITY) {
+			std::string sp;
+			sp << "Time2CPA: " << daa.timeToHorizontalClosestPointOfApproach(i);
+			printMessage(sp);
+			result_temp = daa.timeToHorizontalClosestPointOfApproach(i) <= result_temp ? daa.timeToHorizontalClosestPointOfApproach(i) : result_temp;
+		}
+	}
+	result = result_temp;
+
+	// Now, set the original state back.
+
+	daa.setOwnshipState(ido, pos, vel, time);
+
+	for (auto i : states) {
+		daa.addTrafficState(i.getId(), i.getPosition(), i.getVelocity());
+	}
+}
+
+
+
 void DaidalusCEI::setAlertingTime(bool& bUpdated, double time) {
 	larcfm::ParameterData param = daa.getParameterData();
-	bUpdated = param.set("alerting_time", time, "s");
+	bUpdated = param.set("DWC_Phase_I_alert_3_alerting_time", time, "s");
 
 }
 
 void DaidalusCEI::getAlertingTime(double& time) {
 	larcfm::ParameterData param = daa.getParameterData();
-	time = param.getValue("alerting_time");
-
+	time = param.getValue("DWC_Phase_I_alert_3_alerting_time");
 }
 
 
@@ -137,6 +201,8 @@ void DaidalusCEI::bindLuaFunctions(DtLocalObject* entity, const DtString& script
 		.def("getAlertingTime", &DaidalusCEI::getAlertingTime,
 			luabind::pure_out_value(_2))
 		.def("getResolutionDirection", &DaidalusCEI::getResolutionDirection,
+			luabind::pure_out_value(_2))
+		.def("isDirectionInConflict", &DaidalusCEI::isDirectionInConflict,
 			luabind::pure_out_value(_2))
 		//! The multiple return function requires you to specify which arguments are used to return.
 		//! Here, the indexes start at _2 for the first argument in the function. Our sample function

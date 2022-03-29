@@ -20,12 +20,16 @@ require "vrfutil"
 --    checkpointState.importantNumber = 42
 vrf:setCheckpointMode(CheckpointStateOnly)
 
-
+prev_heading = -1
+alerting_time = 40
 -- Possible states:
 -- Starting
 -- moving: moving to destination
 -- maneuvering: avoiding an aircraft
 taskId = -1
+
+
+
 
 myState = "starting"
 
@@ -111,8 +115,7 @@ function tick()
    daidalus:setOwnshipState(this:getName(), loc3d:getLat(), loc3d:getLon(), loc3d:getAlt(), vel:getEast(), vel:getNorth(), -vel:getDown(), time)
    
    local objs = vrf:getVrfObjects()
-   
-   
+ 
    -- Iterate over all simulated objects, add their traffic states.
    for i, obj in ipairs(objs) do
       if obj:isValid() == true then
@@ -128,6 +131,7 @@ function tick()
 
    end
    
+   -- print time to conflict for every aircraft
    local aircraftNo = daidalus:numberOfAircraft()
    for i, obj in ipairs(objs) do
       if obj:isValid() == true then
@@ -140,6 +144,7 @@ function tick()
       end
    end
 
+   -- Set original destination 
    if (myState == "starting") then 
       if (this:isDestroyed() == false) and (destination ~= nil) then
       local params = {
@@ -150,16 +155,23 @@ function tick()
             keepSpeed = 0,
             speed = 250,
             lateralAcceleration = 1}
-
+         
          taskId = vrf:startSubtask("fly_to_position_and_heading", params)
          myState = "moving-to-goal"
       end
    end
    
+   -- start avoiding aircraft
+   local resBands = -1
+   
+   -- Create heading direction
+   prev_heading = loc3d:vectorToLoc3D(taskParameters.position):getBearing()*180/3.1415
+   daidalus:luaExamplePrintMessage("heading objective: "..prev_heading.. " deg")
+   
+   
    if (myState == "moving-to-goal") then
       if(this:isDestroyed() == false) then
-         local resBands = daidalus:getResolutionDirection()
-         daidalus:luaExamplePrintMessage("res. dir!!:"..resBands)
+         resBands = daidalus:getResolutionDirection()
          if (resBands == resBands) then
             local params = {
                allow_task_visualizations = true,
@@ -170,34 +182,53 @@ function tick()
             vrf:stopSubtask(taskId)
             taskId = vrf:startSubtask("fly-heading", params)
             myState = "avoiding-aircraft"
+         else
+         resBands = -1
          end
       end
+      
    end
    
    if (myState == "avoiding-aircraft") then
       if (this:isDestroyed() == false) then
-      for i, obj in ipairs(objs) do
-         if obj:isValid() == true then
-            local id = daidalus:aircraftIndex(obj:getName())
-            if id ~= -1 and id ~= 0 then
-               local timeToConflict = daidalus:getDetectionTime(id)
-               if (timeToConflict ~= 1/0) then
-                  myState = "moving-to-goal"
+            local CPA = daidalus:isDirectionInConflict(prev_heading, time)
+            local new_alerting = -1
+            if (CPA > 1e8 or CPA == 0) then
+               CPA = alerting_time
+            end
+            if(CPA > alerting_time) then
+               new_alerting = CPA
+            else
+               if(daidalus:getAlertingTime() > CPA) then
+                  new_alerting = math.max(alerting_time, CPA)
                else
-                  myState = "starting"
+                  new_alerting = daidalus:getAlertingTime()
                end
-               
+            end
+            daidalus:setAlertingTime(new_alerting)
+            for i, obj in ipairs(objs) do
+               if obj:isValid() == true and obj:getUUID() ~= this:getUUID() then
+                  local id = daidalus:aircraftIndex(obj:getName())
+                  if id ~= -1 then
+                     local timeToConflict = daidalus:getDetectionTime(id)
+                     if (timeToConflict ~= 1/0) then
+                        daidalus:luaExamplePrintMessage("still in conflict, maneuvering...")
+                        myState = "moving-to-goal"
+                     else
+                        myState = "starting"
+                        daidalus:luaExamplePrintMessage("not in conflict anymore...")
+                     end
+                     
+                  end
+               end
             end
       end
    end
-      end
-   end
    
    
    
-   
+   daidalus:luaExamplePrintMessage("state: "..myState)
    daidalus:getHorizontalDirectionBands()
-   daidalus:luaExamplePrintMessage("daidalus tick: "..daidalus:getCurrentTime())
 end
 
 

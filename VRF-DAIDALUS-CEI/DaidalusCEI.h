@@ -34,6 +34,8 @@ public:
 
 	virtual void getAlertingTime(double& time);
 
+	virtual void isDirectionInConflict(double& result, double direction, double time);
+
 	virtual void setOwnshipState(std::string ido, double lat, double lon, double alt, double vx, double vy, double vz, double to);
 
 	virtual void addTrafficState(int& aci_idx, std::string idi, double lat, double lon, double alt, double vx, double vy, double vz, double to);
