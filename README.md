@@ -8,7 +8,24 @@ This plugin was built using the following:
  - VR-Link 5.8
  - MAK RTI 4.6 MSVC++ 14.0
  - Microsoft Visual Studio 2017, SDK version 10.0.17763.0, platform tools v141
- - 
-Set the environment variables for VRL and RTI accordingly: MAK_VLRDIR and MAK_RTIDIR and include MSVC++ directories.
+
+Set the environment variables for VRL and RTI accordingly: MAK_VLRDIR and MAK_RTIDIR, and include MSVC++ directories to build the project properly.
 
 
+## Usage
+
+### Setting up the plugin
+
+1. Compile NASA's DAIDALUS static library (included in the solution as a VS project named "DAIDALUS-LIB")
+2. Compile the VRF plugin as a dynamic library (included in the solution as a VS project named "VRF-DAIDALUS-CEI")
+3. Launch VRF and create a new plugin entry (this will create the plugin .xml), link it to the .dll file compiled on step 2.
+
+### Using the plugin
+
+The Daidalus object is created and initialized for every simulated object. At every tick, traffic data is fed into the object (daa.addTrafficState()). Conflict results and guidance parameters are then used together with VRF subtasks to move the aircraft. 
+
+## TODOs
+
+- Add some VRF scenarios as examples
+- Get input from sensors, not from object list
+- Tinker with wrapper 
