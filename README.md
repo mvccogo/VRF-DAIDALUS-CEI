@@ -23,3 +23,9 @@ Set the environment variables for VRL and RTI accordingly: MAK_VLRDIR and MAK_RT
 ### Using the plugin
 
 The Daidalus object is created and initialized for every simulated object. At every tick, traffic data is fed into the object (daa.addTrafficState()). Conflict results and guidance parameters are then used together with VRF subtasks to move the aircraft. 
+
+## TODOs
+
+- Add some VRF scenarios as examples
+- Get input from sensors, not from object list
+- Tinker with wrapper 
