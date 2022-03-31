@@ -169,6 +169,7 @@ function tick()
    
    -- Create heading direction
    prev_heading = loc3d:vectorToLoc3D(taskParameters.position):getBearing()*180/3.1415
+   
    daidalus:luaExamplePrintMessage("heading objective: "..prev_heading.. " deg")
    
    
@@ -182,6 +183,7 @@ function tick()
                use_magnetic = false,
                turn_rate = 0.05
             }
+            --prev_heading = this:getVelocity3D():getBearing()*180/3.1415
             vrf:stopSubtask(taskId)
             taskId = vrf:startSubtask("fly-heading", params)
             myState = "avoiding-aircraft"

@@ -16,19 +16,11 @@ void DaidalusCEI::isDirectionInConflict(double& result, double direction, double
 	double gs = vel.groundSpeed("knot");
 	larcfm::Velocity vel_conflict = larcfm::Velocity::makeTrkGsVs(direction, gs, 0);
 	
-	std::string s;
-	s << "Traffic size before: ";
-	s << daa.numberOfAircraft();
-	printMessage(s);
-
 
 	// Save all traffic
 	std::vector<larcfm::TrafficState> states;
-	for (int i = 1; i <= daa.numberOfAircraft() - 1; i++) {
+	for (int i = 1; i < daa.numberOfAircraft(); i++) {
 		if (daa.getAircraftStateAt(i).isValid()) {
-			s.clear();
-			s << "found a valid aircraft, copying";
-			printMessage(s);
 			larcfm::TrafficState ts;
 			memcpy(&ts, &daa.getAircraftStateAt(i), sizeof(larcfm::TrafficState));
 			states.push_back(ts);
@@ -37,12 +29,6 @@ void DaidalusCEI::isDirectionInConflict(double& result, double direction, double
 	std::string ido(daa.getOwnshipState().getId());
 	// Clear traffic by adding new ownship position
 	daa.setOwnshipState(ido, pos, vel_conflict, time);
-
-	s.clear();
-	s << "Traffic size after: ";
-	s << (int)states.size();
-	printMessage(s);
-
 
 	// Add back all traffic 
 	for (auto i : states) {
