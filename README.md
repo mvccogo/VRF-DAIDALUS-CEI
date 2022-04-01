@@ -26,6 +26,13 @@ Set the environment variables for VRL and RTI accordingly: MAK_VLRDIR and MAK_RT
 
 The Daidalus object is created and initialized for every simulated object. At every tick, traffic data is fed into the object (daa.addTrafficState()). Conflict results and guidance parameters are then used together with VRF subtasks to move the aircraft. 
 
+## Saving changes to Tasks
+
+1. If the task is a system script, simply save the .lua file. The file can then be accessed directly in VRF_DIR/data/simulationModelSets/EntityLevel/scripts.
+2. If the task is a scenario script, save the scenario. In order to access the file directly (either the script or the metadata), export the script using the context menu.
+
+
+
 ## TODOs
 
 - Add some VRF scenarios as examples
