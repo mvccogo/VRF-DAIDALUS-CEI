@@ -42,9 +42,6 @@ void DaidalusCEI::isDirectionInConflict(double& result, double direction, double
 	for (int i = 1; i < daa.numberOfAircraft(); i++) {
 		getDetectionTime(time_to_violation, i);
 		if (time_to_violation != PINFINITY) {
-			std::string sp;
-			sp << "Time2CPA: " << daa.timeToHorizontalClosestPointOfApproach(i);
-			printMessage(sp);
 			result_temp = daa.timeToHorizontalClosestPointOfApproach(i) <= result_temp ? daa.timeToHorizontalClosestPointOfApproach(i) : result_temp;
 		}
 	}
@@ -208,13 +205,6 @@ void DaidalusCEI::bindLuaFunctions(DtLocalObject* entity, const DtString& script
 	//! Tell the DtLuaObjectSerializer to ignore this object so that it is not saved
 	//! with the scenario.
 	DtLuaObjectSerializer::instance()->addKeyToIgnore("daidalus");
-	printMessage("Daidalus plug-in was loaded for entity: " + std::string(myEntity->objectName()) + "\n");
-	if (bConfigFileFound) {
-		printMessage("Loaded config file");
-	}
-	else {
-		printMessage("Could not load config file, defaulting to DO 365A");
-	}
 	}
 
 static std::string num2str(double res, const std::string& u) {
