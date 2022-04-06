@@ -15,7 +15,6 @@ void DaidalusCEI::isDirectionInConflict(double& result, double direction, double
 	larcfm::Velocity vel = daa.getOwnshipState().getVelocity();
 	double gs = vel.groundSpeed("knot");
 	larcfm::Velocity vel_conflict = larcfm::Velocity::makeTrkGsVs(direction, gs, 0);
-	
 
 	// Save all traffic
 	std::vector<larcfm::TrafficState> states;
@@ -190,6 +189,15 @@ void DaidalusCEI::bindLuaFunctions(DtLocalObject* entity, const DtString& script
 			luabind::pure_out_value(_2))
 		.def("isDirectionInConflict", &DaidalusCEI::isDirectionInConflict,
 			luabind::pure_out_value(_2))
+		.def("getClosureRate", &DaidalusCEI::getClosureRate,
+			luabind::pure_out_value(_2))
+		.def("getHorizontalDistance", &DaidalusCEI::getHorizontalDistance,
+			luabind::pure_out_value(_2))
+		.def("getHorizontalMissDistanceParams", &DaidalusCEI::getHorizontalMissDistanceParams,
+			luabind::pure_out_value(_2) + luabind::pure_out_value(_3) + luabind::pure_out_value(_4) + luabind::pure_out_value(_5))
+		.def("getRelativeAltitude", &DaidalusCEI::getRelativeAltitude,
+			luabind::pure_out_value(_2))
+
 		//! The multiple return function requires you to specify which arguments are used to return.
 		//! Here, the indexes start at _2 for the first argument in the function. Our sample function
 		//! has the first out value in the argument slot _3. We also have a second out argument at slot

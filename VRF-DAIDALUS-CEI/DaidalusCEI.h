@@ -29,6 +29,8 @@ public:
 		return new DaidalusCEI;
 	}
 
+
+
 	virtual void getResolutionDirection(double& trackOrHeading);
 	virtual void setAlertingTime(bool& bUpdated, double time);
 
@@ -100,7 +102,59 @@ public:
 		daa.setLookaheadTime(lookahead);
 	}
 
+	inline virtual void getClosureRate(double& closure_rate, bool is_horizontal, int idx)
+	{
+		if (is_horizontal)
+		{
+			closure_rate = daa.horizontalClosureRate(idx);
+		}
+		else
+		{
+			closure_rate = daa.verticalClosureRate(idx);
+		}
+
+	}
+
+	inline virtual void getHorizontalDistance(double& dist, int idx)
+	{
+		larcfm::Position own_pos = daa.getOwnshipState().getPosition();
+		larcfm::Position idx_pos = daa.getAircraftStateAt(idx).getPosition();
+		dist = own_pos.distanceH(idx_pos);
+	}
+
+	inline virtual void getHorizontalMissDistanceParams(double& dx, double& dy, double& vrx, double& vry, int idx)
+	{
+
+		larcfm::Vect3 own_s = daa.getOwnshipState().get_s();
+		larcfm::Vect3 idx_s = daa.getAircraftStateAt(idx).get_s();
+
+		larcfm::Vect3 own_v = daa.getOwnshipState().get_v();
+		larcfm::Vect3 idx_v = daa.getAircraftStateAt(idx).get_v();
+		
+		larcfm::Vect3 a = own_s - idx_s;
+		larcfm::Vect3 b = own_v - idx_v;
+
+		dx = a.x;
+		dy = a.y;
+		vrx = b.x;
+		vry = b.y;
+	}
+
+	inline virtual void getRelativeAltitude(double& alt, int idx)
+	{
+		double own_alt = daa.getOwnshipState().altitude();
+		double idx_alt = daa.getAircraftStateAt(idx).altitude();
+		alt = own_alt - idx_alt;
+		if (alt < 0) alt = -alt;
+
+	}
+
 	virtual void getHorizontalDirectionBands();
+
+
+
+
+
 
 	virtual void printMessage(const std::string& message);
 
