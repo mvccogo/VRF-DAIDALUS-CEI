@@ -106,11 +106,17 @@ public:
 	{
 		if (is_horizontal)
 		{
-			closure_rate = daa.horizontalClosureRate(idx);
+			larcfm::Vect3 v = daa.getCore().ownship.get_v() - daa.getAircraftStateAt(idx).get_v();
+
+			larcfm::Vect3 s = daa.getCore().ownship.get_s() - daa.getAircraftStateAt(idx).get_s();
+
+			closure_rate = s.vect2().dot(v.vect2()) < 0 ? -daa.horizontalClosureRate(idx, "m") : daa.horizontalClosureRate(idx, "m");
+
+
 		}
 		else
 		{
-			closure_rate = daa.verticalClosureRate(idx);
+			closure_rate = daa.verticalClosureRate(idx, "m");
 		}
 
 	}
@@ -140,13 +146,25 @@ public:
 		vry = b.y;
 	}
 
+	inline virtual void getTime2CPA(double& tcpa, int idx)
+	{
+		tcpa = daa.timeToHorizontalClosestPointOfApproach(idx);
+	}
+
+	inline virtual void getHMD(double& hmd, int idx)
+	{
+		hmd = daa.predictedHorizontalMissDistance(idx, "m");
+	}
+
+	inline virtual void getModifiedTau(double& tau, double DMOD, int idx)
+	{
+		tau = daa.modifiedTau(idx, DMOD);
+	}
+
 	inline virtual void getRelativeAltitude(double& alt, int idx)
 	{
-		double own_alt = daa.getOwnshipState().altitude();
-		double idx_alt = daa.getAircraftStateAt(idx).altitude();
-		alt = own_alt - idx_alt;
-		if (alt < 0) alt = -alt;
-
+		alt = daa.currentVerticalSeparation(idx);
+		
 	}
 
 	virtual void getHorizontalDirectionBands();

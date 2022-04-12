@@ -83,14 +83,14 @@ void DaidalusCEI::reloadConfig(bool& ret) {
 
 void DaidalusCEI::setOwnshipState(std::string ido, double lat, double lon, double alt, double velx, double vely, double velz, double to)
 {
-	larcfm::Position pos = larcfm::Position::makeLatLonAlt(lat,"rad", lon,"rad", alt, "meters");
+	larcfm::Position pos = larcfm::Position::makeLatLonAlt(lat,"rad", lon,"rad", alt, "m");
 	larcfm::Velocity vel = larcfm::Velocity::makeVxyz(velx, vely, "m/s",velz,"m/s");
 	daa.setOwnshipState(ido, pos, vel, to);
 }
 
 
 void DaidalusCEI::addTrafficState(int& aci_idx, std::string idi, double lat, double lon, double alt, double velx, double vely, double velz, double to) {
-	larcfm::Position pos = larcfm::Position::makeLatLonAlt(lat, "rad", lon, "rad", alt, "meters");
+	larcfm::Position pos = larcfm::Position::makeLatLonAlt(lat, "rad", lon, "rad", alt, "m");
 	larcfm::Velocity vel = larcfm::Velocity::makeVxyz(velx, vely, "m/s", velz, "m/s");
 
 	if (to != -1)
@@ -197,7 +197,12 @@ void DaidalusCEI::bindLuaFunctions(DtLocalObject* entity, const DtString& script
 			luabind::pure_out_value(_2) + luabind::pure_out_value(_3) + luabind::pure_out_value(_4) + luabind::pure_out_value(_5))
 		.def("getRelativeAltitude", &DaidalusCEI::getRelativeAltitude,
 			luabind::pure_out_value(_2))
-
+		.def("getTime2CPA", &DaidalusCEI::getTime2CPA,
+			luabind::pure_out_value(_2))
+		.def("getHMD", &DaidalusCEI::getHMD,
+			luabind::pure_out_value(_2))
+		.def("getModifiedTau", &DaidalusCEI::getModifiedTau,
+			luabind::pure_out_value(_2))
 		//! The multiple return function requires you to specify which arguments are used to return.
 		//! Here, the indexes start at _2 for the first argument in the function. Our sample function
 		//! has the first out value in the argument slot _3. We also have a second out argument at slot
