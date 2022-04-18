@@ -43,6 +43,17 @@ The first scenario is a modified version of Scenario 1 from Victor Carreño.
 
 Ownship properties:
 - Heading: 90deg, 1 degree standard deviation
+- Latitude: 21:19.35 N, 50 meters s.d.
+- Longitude: 157:51.74 W, 50 meters s.d.
+- Altitude: 537 ft, 20 ft s.d.
+- Horizontal speed: 60 kph, 5 kt s.d.
+
+Traffic properties:
+- Heading: 0deg
+- Latitude: 21:18.39 N
+- Longitude: 157:51.19 W
+- Altitude: 550 ft
+- Horizontal speed: 137 kt
 
 
 
