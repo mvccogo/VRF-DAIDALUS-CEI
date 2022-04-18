@@ -33,7 +33,7 @@ The Daidalus object is created and initialized for every simulated object. At ev
 
 ## Scenarios
 
-All scenarios depicted here originate from "Evaluation, Analysis and Results of the DANTi Flight Test Data, the DAIDALUS Detect and Avoid Algorithm, and the DANTi Concept for Detect and Avoid in the Cockpit" [^1].
+All scenarios depicted here originate from NASA's Contract Report "Evaluation, Analysis and Results of the DANTi Flight Test Data, the DAIDALUS Detect and Avoid Algorithm, and the DANTi Concept for Detect and Avoid in the Cockpit" [^1].
 
 
 ### Scenario 1
