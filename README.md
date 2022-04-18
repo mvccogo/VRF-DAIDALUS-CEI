@@ -48,6 +48,9 @@ Ownship properties:
 
 ## TODOs
 
-- Add some VRF scenarios as examples
+- ~~~Add some VRF scenarios as examples
 - Get input from sensors, not from object list
-- Tinker with wrapper 
+- ~~Tinker with wrapper 
+- Add support for vertical speed maneuvers
+- Add scenarios w/ climbing maneuvers
+
