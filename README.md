@@ -67,7 +67,7 @@ Traffic properties:
 
 - [x] Add some VRF scenarios as examples
 - [x] Tinger with wrapper
-- [ ] Get input from sensors, not from object list
+- [ ] https://github.com/Mudrost/VRF-DAIDALUS-CEI/issues/1
 - [ ] Add support for vertical speed maneuvers
 - [ ] Add scenarios w/ climbing maneuvers
 
