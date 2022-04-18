@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE boost_serialization>
+<boost_serialization signature="serialization::archive" version="14">
+<ScenarioScripts class_id="0" tracking_level="0" version="0">
+	<count>2</count>
+	<item_version>0</item_version>
+	<item class_id="1" tracking_level="0" version="0">
+		<first>daidalus_start-up_sys</first>
+		<second class_id="2" tracking_level="0" version="17">
+			<myScriptId>daidalus_start-up_sys</myScriptId>
+			<myMenuText>Daidalus Move-to-location</myMenuText>
+			<myToolTip></myToolTip>
+			<myMenuIcon></myMenuIcon>
+			<myVersion>1.00000000000000006e-01</myVersion>
+			<myScriptEngine>lua</myScriptEngine>
+			<myComments></myComments>
+			<myMenuLocations class_id="3" tracking_level="0" version="0">
+				<count>1</count>
+				<item_version>0</item_version>
+				<item>$(menutext)</item>
+			</myMenuLocations>
+			<myIsSystemScript>1</myIsSystemScript>
+			<myDescription></myDescription>
+			<myScriptLocation>..\data\simulationModelSets\EntityLevel\scripts\\daidalus_start-up_1.lua</myScriptLocation>
+			<myDirectoryPath>Aircraft/Daidalus</myDirectoryPath>
+			<myEntityTypes>
+				<count>1</count>
+				<item_version>0</item_version>
+				<item>-1:-1:-1:-1:-1:-1:-1</item>
+			</myEntityTypes>
+			<myVariables>
+				<count>6</count>
+				<item_version>0</item_version>
+				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;14&quot;&gt;
+&lt;DtScriptedTaskVariable class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;4&quot;&gt;
+	&lt;myVariableName&gt;position&lt;/myVariableName&gt;
+	&lt;myType&gt;locationwithoutaltitude&lt;/myType&gt;
+	&lt;myLabel&gt;&lt;/myLabel&gt;
+	&lt;myToolTip&gt;&lt;/myToolTip&gt;
+	&lt;myDefaultValue&gt;&lt;/myDefaultValue&gt;
+	&lt;myRangeBottom&gt;-1.00000000000000000e+05&lt;/myRangeBottom&gt;
+	&lt;myRangeTop&gt;1.00000000000000000e+05&lt;/myRangeTop&gt;
+	&lt;myVariableData&gt;&lt;/myVariableData&gt;
+	&lt;myVisible&gt;1&lt;/myVisible&gt;
+	&lt;myIndent&gt;0&lt;/myIndent&gt;
+	&lt;myInternal&gt;0&lt;/myInternal&gt;
+	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
+&lt;/DtScriptedTaskVariable&gt;
+</item>
+				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;14&quot;&gt;
+&lt;DtScriptedTaskVariable class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;4&quot;&gt;
+	&lt;myVariableName&gt;lateralAcceleration&lt;/myVariableName&gt;
+	&lt;myType&gt;double&lt;/myType&gt;
+	&lt;myLabel&gt;Maximum Lateral Acceleration (Gs)&lt;/myLabel&gt;
+	&lt;myToolTip&gt;Maximum acceleration for turning (Gs)&lt;/myToolTip&gt;
+	&lt;myDefaultValue&gt;1&lt;/myDefaultValue&gt;
+	&lt;myRangeBottom&gt;0.00000000000000000e+00&lt;/myRangeBottom&gt;
+	&lt;myRangeTop&gt;1.00000000000000000e+02&lt;/myRangeTop&gt;
+	&lt;myVariableData&gt;&lt;/myVariableData&gt;
+	&lt;myVisible&gt;1&lt;/myVisible&gt;
+	&lt;myIndent&gt;0&lt;/myIndent&gt;
+	&lt;myInternal&gt;0&lt;/myInternal&gt;
+	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
+&lt;/DtScriptedTaskVariable&gt;
+</item>
+				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;14&quot;&gt;
+&lt;DtScriptedTaskVariable class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;4&quot;&gt;
+	&lt;myVariableName&gt;cruiseSpeed&lt;/myVariableName&gt;
+	&lt;myType&gt;rate&lt;/myType&gt;
+	&lt;myLabel&gt;Desired Cruise Speed&lt;/myLabel&gt;
+	&lt;myToolTip&gt;&lt;/myToolTip&gt;
+	&lt;myDefaultValue&gt;102.778&lt;/myDefaultValue&gt;
+	&lt;myRangeBottom&gt;0.00000000000000000e+00&lt;/myRangeBottom&gt;
+	&lt;myRangeTop&gt;5.55555555555555543e+02&lt;/myRangeTop&gt;
+	&lt;myVariableData&gt;&lt;/myVariableData&gt;
+	&lt;myVisible&gt;1&lt;/myVisible&gt;
+	&lt;myIndent&gt;1&lt;/myIndent&gt;
+	&lt;myInternal&gt;0&lt;/myInternal&gt;
+	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
+&lt;/DtScriptedTaskVariable&gt;
+</item>
+				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;14&quot;&gt;
+&lt;DtScriptedTaskVariable class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;4&quot;&gt;
+	&lt;myVariableName&gt;finalHeading&lt;/myVariableName&gt;
+	&lt;myType&gt;magneticnorthheading&lt;/myType&gt;
+	&lt;myLabel&gt;Final heading&lt;/myLabel&gt;
+	&lt;myToolTip&gt;&lt;/myToolTip&gt;
+	&lt;myDefaultValue&gt;&lt;/myDefaultValue&gt;
+	&lt;myRangeBottom&gt;0.00000000000000000e+00&lt;/myRangeBottom&gt;
+	&lt;myRangeTop&gt;3.60000000000000000e+02&lt;/myRangeTop&gt;
+	&lt;myVariableData&gt;&lt;/myVariableData&gt;
+	&lt;myVisible&gt;1&lt;/myVisible&gt;
+	&lt;myIndent&gt;0&lt;/myIndent&gt;
+	&lt;myInternal&gt;0&lt;/myInternal&gt;
+	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
+&lt;/DtScriptedTaskVariable&gt;
+</item>
+				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;14&quot;&gt;
+&lt;DtScriptedTaskVariable class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;4&quot;&gt;
+	&lt;myVariableName&gt;altitude&lt;/myVariableName&gt;
+	&lt;myType&gt;altitude&lt;/myType&gt;
+	&lt;myLabel&gt;&lt;/myLabel&gt;
+	&lt;myToolTip&gt;&lt;/myToolTip&gt;
+	&lt;myDefaultValue&gt;0&lt;/myDefaultValue&gt;
+	&lt;myRangeBottom&gt;-1.00000003200000006e+05&lt;/myRangeBottom&gt;
+	&lt;myRangeTop&gt;1.00000003200000006e+05&lt;/myRangeTop&gt;
+	&lt;myVariableData&gt;&lt;/myVariableData&gt;
+	&lt;myVisible&gt;1&lt;/myVisible&gt;
+	&lt;myIndent&gt;0&lt;/myIndent&gt;
+	&lt;myInternal&gt;0&lt;/myInternal&gt;
+	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
+&lt;/DtScriptedTaskVariable&gt;
+</item>
+				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;14&quot;&gt;
+&lt;DtScriptedTaskVariable class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;4&quot;&gt;
+	&lt;myVariableName&gt;daidalusOn&lt;/myVariableName&gt;
+	&lt;myType&gt;checkbox&lt;/myType&gt;
+	&lt;myLabel&gt;&lt;/myLabel&gt;
+	&lt;myToolTip&gt;&lt;/myToolTip&gt;
+	&lt;myDefaultValue&gt;1&lt;/myDefaultValue&gt;
+	&lt;myRangeBottom&gt;-1.00000000000000000e+05&lt;/myRangeBottom&gt;
+	&lt;myRangeTop&gt;1.00000000000000000e+05&lt;/myRangeTop&gt;
+	&lt;myVariableData&gt;&lt;/myVariableData&gt;
+	&lt;myVisible&gt;1&lt;/myVisible&gt;
+	&lt;myIndent&gt;0&lt;/myIndent&gt;
+	&lt;myInternal&gt;0&lt;/myInternal&gt;
+	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
+&lt;/DtScriptedTaskVariable&gt;
+</item>
+			</myVariables>
+			<myScript>-- &gt;&gt;&gt;&gt; Task documentation here &lt;&lt;&lt;&lt;
+
+-- This script template has each of the script entry point functions.
+-- They are described in detail in VR-Forces Users Guide.
+
+-- Some basic VRF Utilities defined in a common module.
+require &quot;vrfutil&quot;
+
+-- Global Variables
+--
+-- Global variables get saved when a scenario gets checkpointed in one of
+-- the folowing ways:
+-- 1) If the checkpoint mode is AllGlobals, all global variables in the script 
+--   will be saved as part of the save state. To get this mode, call
+--   vrf:setCheckpointMode(AllGlobals).
+-- 2) If the checkpoint mode is CheckpointStateOnly, the script will *only* 
+--    save variables that are part of the checkpointState table.  
+--    To get this mode, call vrf:setCheckpointMode(CheckpointStateOnly).
+--    Example: 
+--    checkpointState.importantNumber = 42
+vrf:setCheckpointMode(CheckpointStateOnly)
+
+prev_heading = -1
+alerting_time = daidalus:getAlertingTime()
+maneuvering = false
+
+severity_table = {}
+
+daidalus_on = taskParameters.daidalusOn
+daidalus_delay = 0
+
+
+trafficID = -1
+-- Possible states:
+-- starting: setting up destination
+-- moving-to-goal: moving to destination
+-- maneuvering: avoiding an aircraft
+
+moving_taskId = -1
+fly_heading_taskid = -1
+
+
+
+
+myState = &quot;starting&quot;
+
+-- Task Parameters Available in Script
+--  taskParameters.destination Type: Location3D - Move to location destination.
+destination = taskParameters.position
+
+-- Called when the task first starts. Never called again.
+function init()
+   daidalus:luaExamplePrintMessage(&quot;Starting up Daidalus&quot;)
+   local ret = daidalus:reloadConfig()
+
+   
+   -- Set up wind configuration
+   local loc3d = this:getLocation3D()
+   local wind_dir = vrf:getWindDirection(loc3d)
+   local wind_speed = vrf:getWindSpeed(loc3d)
+   
+   local wind_vect = Vector3D(0,0,0)
+   wind_vect:setBearingInclRange(wind_dir, 0, wind_speed)
+   
+   --daidalus:setWindVelocityTo(wind_vect:getEast(), wind_vect:getNorth() , -wind_vect:getDown())
+   
+   -- Set the tick period for this script.
+   vrf:setTickPeriod(0.33)
+   
+   -- Check destination 
+   if (destination == nil) then
+      printWarn(&quot;Daidalus startup: no destination?\n&quot;)
+      vrf:endTask(false)
+      return
+   end
+   
+
+end
+
+-- Called each tick while this task is active.
+function tick()
+   -- endTask() causes the current task to end once the current tick is complete. tick() will not be called again.
+   -- Wrap it in an appropriate test for completion of the task.
+   
+   
+   -- Check for task completion
+   if (myState == &quot;starting&quot; or not daidalus_on) and vrf:isSubtaskComplete(moving_taskId) then
+      writeToFile(&quot;severity.txt&quot;)
+      vrf:endTask(false)
+      --vrf:finishTest(0, &quot;Scenario 1 simulation completed.&quot;)
+      return
+   end
+   
+   
+   
+   for i,k in pairs(severity_table) do
+      --daidalus:luaExamplePrintMessage(&quot;&quot;..i..&quot;,&quot;..k[1])
+   end
+   
+   -- Add this object to ownship
+   local loc3d = this:getLocation3D()
+   local vel = this:getVelocity3D()
+   local time = vrf:getSimulationTime()
+   
+   daidalus:setOwnshipState(this:getName(), loc3d:getLat(), loc3d:getLon(), loc3d:getAlt(), vel:getEast(), vel:getNorth(), -vel:getDown(), time)
+   
+   local objs = vrf:getVrfObjects()
+ 
+   -- Iterate over all simulated objects, add their traffic states.
+   for i, obj in ipairs(objs) do
+      if obj:isValid() == true then
+         local type = obj:getEntityType()
+         type = type.sub(type, type.find(type,&quot;:&quot;)+1, type.find(type,&quot;:&quot;)+1)
+         if type == &quot;2&quot; and this:getUUID() ~= obj:getUUID() then
+            local loc3d_obj = obj:getLocation3D()
+            local vel_obj = obj:getVelocity3D()
+            trafficID = daidalus:addTrafficState(obj:getName(), loc3d_obj:getLat(), loc3d_obj:getLon(), loc3d_obj:getAlt(), vel_obj:getEast(), vel_obj:getNorth(), -vel_obj:getDown(), -1)  
+            end
+      
+      end
+
+   end
+   
+   -- print time to conflict for every aircraft
+   local aircraftNo = daidalus:numberOfAircraft()
+   for i, obj in ipairs(objs) do
+      if obj:isValid() == true then
+         local id = daidalus:aircraftIndex(obj:getName())
+         if id ~= -1 and id ~= 0 then
+            local timeToConflict = daidalus:getDetectionTime(id)
+            daidalus:luaExamplePrintMessage(&quot;time to conflict with &quot;..obj:getName()..&quot;: &quot;..timeToConflict)
+            
+         end
+      end
+   end
+
+   -- Set original destination 
+   if (myState == &quot;starting&quot;) then 
+      if (this:isDestroyed() == false) and (destination ~= nil) then
+      local params = {
+            position = taskParameters.position,
+            keepAltitude = 1,
+            altitude = taskParameters.altitude,
+            heading = taskParameters.finalHeading,
+            keepSpeed = 1,
+            speed = this:getOrderedSpeed(),
+            lateralAcceleration = 1}
+         
+         if not vrf:isSubtaskRunning(moving_taskId) then
+            vrf:stopSubtask(fly_heading_taskid)
+            moving_taskId = vrf:startSubtask(&quot;fly_to_position_and_heading&quot;, params)
+            myState = &quot;moving-to-goal&quot;
+         end
+      end
+   end
+   
+   -- start avoiding aircraft
+   local resBands = -1
+   
+   -- Create heading direction
+   prev_heading = math.deg(loc3d:vectorToLoc3D(taskParameters.position):getBearing())
+   
+   
+   if (myState == &quot;moving-to-goal&quot; and daidalus_on == true) then
+      if(this:isDestroyed() == false) then
+         resBands = daidalus:getResolutionDirection()
+         if (resBands == resBands) then
+            local params = {
+               allow_task_visualizations = true,
+               heading = math.rad(resBands),
+               use_magnetic = false,
+               turn_rate = math.rad(3)
+            }
+            vrf:stopSubtask(moving_taskId)
+            fly_heading_taskid = vrf:startSubtask(&quot;fly-heading&quot;, params)
+            myState = &quot;avoiding-aircraft&quot;
+         else
+            resBands = -1
+            if maneuvering ==  true then
+               myState = &quot;avoiding-aircraft&quot;
+            end
+         end
+      end
+      
+   end
+   
+   if (myState == &quot;avoiding-aircraft&quot;) then
+      if (this:isDestroyed() == false) then
+         local CPA = daidalus:isDirectionInConflict(prev_heading, time)
+         local new_alerting = -1
+         if (CPA &gt; 1e8 or CPA == 0) then
+            CPA = alerting_time
+         end
+         if(CPA &gt; alerting_time) then
+            new_alerting = CPA
+         else
+            if(daidalus:getAlertingTime() &gt; CPA) then
+               new_alerting = math.max(alerting_time, CPA)
+            else
+               new_alerting = daidalus:getAlertingTime()
+            end
+         end
+         daidalus:luaExamplePrintMessage(&quot;Setting new alerting time: &quot;..new_alerting..&quot;s&quot;)
+         daidalus:setAlertingTime(new_alerting)
+         local timeToConflict = daidalus:isDirectionInConflict(prev_heading, time)
+         if (timeToConflict &lt; 1e8) then
+            daidalus:luaExamplePrintMessage(&quot;Still in conflict, keep maneuvering...&quot;)
+            myState = &quot;moving-to-goal&quot;
+            maneuvering = true
+         else
+            daidalus:luaExamplePrintMessage(&quot;Not in conflict, restart navigation&quot;)
+            myState = &quot;starting&quot;
+         end
+      end
+   end
+   
+   --daidalus:getHorizontalDirectionBands()
+   calcAndSetSeverity()
+end
+
+
+function calcAndSetSeverity()
+      local RangePen = getRangePen(trafficID)
+      local HMDPen = getHMDPen(trafficID)
+      local VertPen = getVertPen(trafficID)
+      table.insert(severity_table, getSeverity(RangePen, HMDPen, VertPen))
+      daidalus:luaExamplePrintMessage(&quot;Encounter severity: &quot;..getSeverity(RangePen, HMDPen, VertPen)..&quot;%&quot;)
+end
+
+
+
+-- Called when this task is being suspended, likely by a reaction activating.
+function suspend()
+   -- By default, halt all subtasks and other entity tasks started by this task when suspending.
+   vrf:stopAllSubtasks()
+   vrf:stopAllTasks()
+end
+
+-- Called when this task is being resumed after being suspended.
+function resume()
+   -- By default, simply call init() to start the task over.
+   init()
+end
+
+-- Called immediately before a scenario checkpoint is saved when
+-- this task is active.
+-- It is typically not necessary to add code to this function.
+function saveState()
+end
+
+-- Called immediately after a scenario checkpoint is loaded in which
+-- this task is active.
+-- It is typically not necessary to add code to this function.
+function loadState()
+end
+
+-- Called when this task is ending, for any reason.
+-- It is typically not necessary to add code to this function.
+function shutdown()
+end
+
+-- Called whenever the entity receives a text report message while
+-- this task is active.
+--   message is the message text string.
+--   sender is the SimObject which sent the message.
+function receiveTextMessage(message, sender)
+end
+
+
+-- Batch analysis utilities
+
+-- Horizontal Proximity (tau MOD)
+
+function getRangePen(idx)
+   r_i = daidalus:getHorizontalDistance(idx)
+   rdot_i = daidalus:getClosureRate(true, idx)
+   --rdot_i = math.abs(rdot_i)
+   local DTHR = 180 -- Meters
+   local taumod = 0
+   local taumod_test = daidalus:getModifiedTau(DTHR,idx)
+   --taumod = taumod_test
+   local b = 0.5*math.sqrt((rdot_i * taumod)^2 + 4*DTHR^2) - rdot_i*taumod
+   local S_i = math.max(DTHR, b)
+   return math.min(r_i/S_i, 1)
+  
+end
+
+
+-- Horizontal Miss-distance Projection (HMD)
+
+function getHMDPen(idx)
+   local DTHR = 180
+   return math.min(daidalus:getHMD(idx)/DTHR, 1)
+end
+
+-- Vertical Distance
+
+function getVertPen(idx)
+   local dh_i = daidalus:getRelativeAltitude(idx)
+   local ZTHR = 91
+   return math.min(dh_i/ZTHR, 1)
+end
+
+
+-- Norm operator
+
+function norm(a,b)
+   return ((a*a) + (b*b) - (a*a*b*b))^0.5
+end
+
+-- Severity calculation
+
+function getSeverity(RangePen, HMDPen, VertPen)
+   daidalus:luaExamplePrintMessage(&quot;Range, HMD, Vert: &quot;..RangePen..&quot;, &quot;..HMDPen..&quot;, &quot;..VertPen)
+   local a = norm(RangePen,HMDPen)
+   local b = norm(a, VertPen)
+   SLoWC_i = (1 - norm(norm(RangePen,HMDPen), VertPen)) * 100
+   return SLoWC_i
+end
+
+-- Write severity to file
+function writeToFile(file)
+   local file = io.open(&quot;C:\\Users\\matheusmc\\Documents\\GitHub\\VRF-DAIDALUS-CEI\\VRF-DAIDALUS-CEI\\VRF-scripts\\Scenario1\\&quot;..file, &quot;a&quot;)
+   io.output(file)
+   
+   local max_sev = 0
+   local current_fuel, total_fuel = this:getResourceAmounts(&quot;movement|fuel&quot;)
+   for i,k in pairs(severity_table) do
+      if k &gt; max_sev then
+         max_sev = k
+      end
+   end
+   
+   io.write(max_sev..&quot;,&quot;..(total_fuel-current_fuel)..&quot;\n&quot;)
+   
+   io.close(file)
+end
+</myScript>
+			<myActionCategories>Movement</myActionCategories>
+			<myShowInMenu>1</myShowInMenu>
+			<myEncrypted>0</myEncrypted>
+			<myScriptType>1</myScriptType>
+			<myDoctrines></myDoctrines>
+			<myFlags>1</myFlags>
+			<myShowInToolbar>0</myShowInToolbar>
+			<myToolbarLocation></myToolbarLocation>
+			<myExtendedMenuText></myExtendedMenuText>
+			<myShortDescription>Move-to-location avoiding other aircraft</myShortDescription>
+			<myUiLayout>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;ui version=&quot;4.0&quot;&gt;
+ &lt;class&gt;DoNotChangeThisFormName&lt;/class&gt;
+ &lt;widget class=&quot;QWidget&quot; name=&quot;mainwindow&quot;&gt;
+  &lt;property name=&quot;geometry&quot;&gt;
+   &lt;rect&gt;
+    &lt;x&gt;20&lt;/x&gt;
+    &lt;y&gt;20&lt;/y&gt;
+    &lt;width&gt;500&lt;/width&gt;
+    &lt;height&gt;500&lt;/height&gt;
+   &lt;/rect&gt;
+  &lt;/property&gt;
+  &lt;property name=&quot;windowTitle&quot;&gt;
+   &lt;string&gt;Form&lt;/string&gt;
+  &lt;/property&gt;
+ &lt;/widget&gt;
+ &lt;resources/&gt;
+ &lt;connections/&gt;
+&lt;/ui&gt;
+</myUiLayout>
+			<myAliases class_id="4" tracking_level="0" version="0">
+				<count>1</count>
+				<item_version>0</item_version>
+				<item>daidalus_start-up</item>
+			</myAliases>
+			<myCanBeExecutedConcurrently>0</myCanBeExecutedConcurrently>
+			<myRespectScriptLocation>0</myRespectScriptLocation>
+			<myShowDescriptionInDialog>0</myShowDescriptionInDialog>
+			<myUsesBehaviorEngine>0</myUsesBehaviorEngine>
+			<myCommandLevel>1</myCommandLevel>
+		</second>
+	</item>
+	<item>
+		<first>setup_daidalus_scenario</first>
+		<second>
+			<myScriptId>setup_daidalus_scenario</myScriptId>
+			<myMenuText>Setup Daidalus Scenario</myMenuText>
+			<myToolTip></myToolTip>
+			<myMenuIcon></myMenuIcon>
+			<myVersion>1.00000000000000000e+00</myVersion>
+			<myScriptEngine>lua</myScriptEngine>
+			<myComments></myComments>
+			<myMenuLocations>
+				<count>1</count>
+				<item_version>0</item_version>
+				<item>$(menutext)</item>
+			</myMenuLocations>
+			<myIsSystemScript>0</myIsSystemScript>
+			<myDescription></myDescription>
+			<myScriptLocation></myScriptLocation>
+			<myDirectoryPath>Aircraft/Daidalus</myDirectoryPath>
+			<myEntityTypes>
+				<count>1</count>
+				<item_version>0</item_version>
+				<item>-1:-1:-1:-1:-1:-1:-1</item>
+			</myEntityTypes>
+			<myVariables>
+				<count>4</count>
+				<item_version>0</item_version>
+				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;14&quot;&gt;
+&lt;DtScriptedTaskVariable class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;4&quot;&gt;
+	&lt;myVariableName&gt;horizontalDirection&lt;/myVariableName&gt;
+	&lt;myType&gt;magneticnorthheading&lt;/myType&gt;
+	&lt;myLabel&gt;&lt;/myLabel&gt;
+	&lt;myToolTip&gt;&lt;/myToolTip&gt;
+	&lt;myDefaultValue&gt;90&lt;/myDefaultValue&gt;
+	&lt;myRangeBottom&gt;0.00000000000000000e+00&lt;/myRangeBottom&gt;
+	&lt;myRangeTop&gt;3.60000000000000000e+02&lt;/myRangeTop&gt;
+	&lt;myVariableData&gt;&lt;/myVariableData&gt;
+	&lt;myVisible&gt;1&lt;/myVisible&gt;
+	&lt;myIndent&gt;0&lt;/myIndent&gt;
+	&lt;myInternal&gt;0&lt;/myInternal&gt;
+	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
+&lt;/DtScriptedTaskVariable&gt;
+</item>
+				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;14&quot;&gt;
+&lt;DtScriptedTaskVariable class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;4&quot;&gt;
+	&lt;myVariableName&gt;initialLocation&lt;/myVariableName&gt;
+	&lt;myType&gt;location&lt;/myType&gt;
+	&lt;myLabel&gt;&lt;/myLabel&gt;
+	&lt;myToolTip&gt;&lt;/myToolTip&gt;
+	&lt;myDefaultValue&gt;&lt;/myDefaultValue&gt;
+	&lt;myRangeBottom&gt;-1.00000000000000000e+05&lt;/myRangeBottom&gt;
+	&lt;myRangeTop&gt;1.00000000000000000e+05&lt;/myRangeTop&gt;
+	&lt;myVariableData&gt;&lt;/myVariableData&gt;
+	&lt;myVisible&gt;1&lt;/myVisible&gt;
+	&lt;myIndent&gt;0&lt;/myIndent&gt;
+	&lt;myInternal&gt;0&lt;/myInternal&gt;
+	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
+&lt;/DtScriptedTaskVariable&gt;
+</item>
+				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;14&quot;&gt;
+&lt;DtScriptedTaskVariable class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;4&quot;&gt;
+	&lt;myVariableName&gt;verticalSpeed&lt;/myVariableName&gt;
+	&lt;myType&gt;rate&lt;/myType&gt;
+	&lt;myLabel&gt;&lt;/myLabel&gt;
+	&lt;myToolTip&gt;&lt;/myToolTip&gt;
+	&lt;myDefaultValue&gt;0&lt;/myDefaultValue&gt;
+	&lt;myRangeBottom&gt;-1.00000000000000000e+05&lt;/myRangeBottom&gt;
+	&lt;myRangeTop&gt;1.00000000000000000e+05&lt;/myRangeTop&gt;
+	&lt;myVariableData&gt;&lt;/myVariableData&gt;
+	&lt;myVisible&gt;1&lt;/myVisible&gt;
+	&lt;myIndent&gt;0&lt;/myIndent&gt;
+	&lt;myInternal&gt;0&lt;/myInternal&gt;
+	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
+&lt;/DtScriptedTaskVariable&gt;
+</item>
+				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;14&quot;&gt;
+&lt;DtScriptedTaskVariable class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;4&quot;&gt;
+	&lt;myVariableName&gt;horizontalSpeed&lt;/myVariableName&gt;
+	&lt;myType&gt;rate&lt;/myType&gt;
+	&lt;myLabel&gt;&lt;/myLabel&gt;
+	&lt;myToolTip&gt;&lt;/myToolTip&gt;
+	&lt;myDefaultValue&gt;0&lt;/myDefaultValue&gt;
+	&lt;myRangeBottom&gt;-1.00000000000000000e+05&lt;/myRangeBottom&gt;
+	&lt;myRangeTop&gt;1.00000000000000000e+05&lt;/myRangeTop&gt;
+	&lt;myVariableData&gt;&lt;/myVariableData&gt;
+	&lt;myVisible&gt;1&lt;/myVisible&gt;
+	&lt;myIndent&gt;0&lt;/myIndent&gt;
+	&lt;myInternal&gt;0&lt;/myInternal&gt;
+	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
+&lt;/DtScriptedTaskVariable&gt;
+</item>
+			</myVariables>
+			<myScript>-- &gt;&gt;&gt;&gt; Task documentation here &lt;&lt;&lt;&lt;
+
+-- This script template has each of the script entry point functions.
+-- They are described in detail in VR-Forces Users Guide.
+
+-- Some basic VRF Utilities defined in a common module.
+require &quot;vrfutil&quot;
+
+-- Global Variables
+--
+-- Global variables get saved when a scenario gets checkpointed in one of
+-- the folowing ways:
+-- 1) If the checkpoint mode is AllGlobals, all global variables in the script 
+--   will be saved as part of the save state. To get this mode, call
+--   vrf:setCheckpointMode(AllGlobals).
+-- 2) If the checkpoint mode is CheckpointStateOnly, the script will *only* 
+--    save variables that are part of the checkpointState table.  
+--    To get this mode, call vrf:setCheckpointMode(CheckpointStateOnly).
+--    Example: 
+--    checkpointState.importantNumber = 42
+vrf:setCheckpointMode(CheckpointStateOnly)
+
+-- Task Parameters Available in Script
+--  taskParameters.horizontalDirection Type: Table: [heading (radians), using_magnetic (boolean)]
+--  taskParameters.initialLocation Type: Location3D
+--  taskParameters.verticalSpeed Type: Real Unit: meters/second
+--  taskParameters.horizontalSpeed Type: Real Unit: meters/second
+
+
+-- Called when the task first starts. Never called again.
+function init()
+   -- Deviation: 5%
+   local RAND_DEVIATION = 0.05
+   -- Set location with random deviation
+   local rand_pos = taskParameters.initialLocation
+   
+   
+   local LAT_LON_DEVIATION = 50  -- Meters
+   local latlon_degree_deviation = LAT_LON_DEVIATION/111000
+   local latlon_rad_deviation = math.rad(latlon_degree_deviation)
+   
+   local gaussian = {
+      vrf:gaussian(),
+      vrf:gaussian(),
+      vrf:gaussian()
+   }
+   rand_pos:setLat(rand_pos:getLat()+ latlon_rad_deviation*gaussian[1])
+   rand_pos:setLon(rand_pos:getLon()+ latlon_rad_deviation*gaussian[2])
+   rand_pos:setAlt(rand_pos:getAlt()+ latlon_rad_deviation*gaussian[3])
+
+   vrf:executeSetData(&quot;set-location&quot;, {location = rand_pos})
+   
+   -- Set current speed with random deviation
+   local rand_speed_deviation = 2.6 -- Meters per second 
+   vrf:executeSetData(&quot;set-current-speed&quot;, {speed = taskParameters.horizontalSpeed + rand_speed_deviation*vrf:gaussian()})
+   vrf:executeSetData(&quot;set-speed&quot;, {speed = taskParameters.horizontalSpeed + rand_speed_deviation*vrf:gaussian()})
+   
+   -- Set current heading with random deviation
+   local rand_heading_deviation = math.rad(1)
+   vrf:executeSetData(&quot;set-heading&quot;, {heading = taskParameters.horizontalDirection[&quot;heading&quot;] + rand_heading_deviation*vrf:gaussian(), mode = 0})
+   
+   -- 
+
+
+
+   --Test  
+   vrf:setTickPeriod(0.5)
+end
+
+-- Called each tick while this task is active.
+function tick()
+   -- endTask() causes the current task to end once the current tick is complete. tick() will not be called again.
+   -- Wrap it in an appropriate test for completion of the task.
+   vrf:endTask(true)
+end
+
+
+-- Called when this task is being suspended, likely by a reaction activating.
+function suspend()
+   -- By default, halt all subtasks and other entity tasks started by this task when suspending.
+   vrf:stopAllSubtasks()
+   vrf:stopAllTasks()
+end
+
+-- Called when this task is being resumed after being suspended.
+function resume()
+   -- By default, simply call init() to start the task over.
+   init()
+end
+
+-- Called immediately before a scenario checkpoint is saved when
+-- this task is active.
+-- It is typically not necessary to add code to this function.
+function saveState()
+end
+
+-- Called immediately after a scenario checkpoint is loaded in which
+-- this task is active.
+-- It is typically not necessary to add code to this function.
+function loadState()
+end
+
+-- Called when this task is ending, for any reason.
+-- It is typically not necessary to add code to this function.
+function shutdown()
+end
+
+-- Called whenever the entity receives a text report message while
+-- this task is active.
+--   message is the message text string.
+--   sender is the SimObject which sent the message.
+function receiveTextMessage(message, sender)
+end
+</myScript>
+			<myActionCategories>Movement</myActionCategories>
+			<myShowInMenu>1</myShowInMenu>
+			<myEncrypted>0</myEncrypted>
+			<myScriptType>1</myScriptType>
+			<myDoctrines></myDoctrines>
+			<myFlags>1</myFlags>
+			<myShowInToolbar>0</myShowInToolbar>
+			<myToolbarLocation></myToolbarLocation>
+			<myExtendedMenuText></myExtendedMenuText>
+			<myShortDescription>Sets up all data relevant to this scenario.</myShortDescription>
+			<myUiLayout>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;ui version=&quot;4.0&quot;&gt;
+ &lt;class&gt;DoNotChangeThisFormName&lt;/class&gt;
+ &lt;widget class=&quot;QWidget&quot; name=&quot;mainwindow&quot;&gt;
+  &lt;property name=&quot;geometry&quot;&gt;
+   &lt;rect&gt;
+    &lt;x&gt;20&lt;/x&gt;
+    &lt;y&gt;20&lt;/y&gt;
+    &lt;width&gt;500&lt;/width&gt;
+    &lt;height&gt;500&lt;/height&gt;
+   &lt;/rect&gt;
+  &lt;/property&gt;
+  &lt;property name=&quot;windowTitle&quot;&gt;
+   &lt;string&gt;Form&lt;/string&gt;
+  &lt;/property&gt;
+ &lt;/widget&gt;
+ &lt;resources/&gt;
+ &lt;connections/&gt;
+&lt;/ui&gt;
+</myUiLayout>
+			<myAliases>
+				<count>0</count>
+				<item_version>0</item_version>
+			</myAliases>
+			<myCanBeExecutedConcurrently>0</myCanBeExecutedConcurrently>
+			<myRespectScriptLocation>0</myRespectScriptLocation>
+			<myShowDescriptionInDialog>0</myShowDescriptionInDialog>
+			<myUsesBehaviorEngine>0</myUsesBehaviorEngine>
+			<myCommandLevel>1</myCommandLevel>
+		</second>
+	</item>
+</ScenarioScripts>
+</boost_serialization>
+
