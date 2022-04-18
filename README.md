@@ -33,13 +33,14 @@ The Daidalus object is created and initialized for every simulated object. At ev
 
 ## Scenarios
 
-All scenarios depicted here originate from "Evaluation, Analysis and Results of the DANTi Flight Test Data, the DAIDALUS Detect and Avoid Algorithm, and the DANTi Concept for Detect and Avoid in the Cockpit". 
+All scenarios depicted here originate from "Evaluation, Analysis and Results of the DANTi Flight Test Data, the DAIDALUS Detect and Avoid Algorithm, and the DANTi Concept for Detect and Avoid in the Cockpit" [^1].
 
 
 ### Scenario 1
 
-The first scenario is a modified version of Scenario 1 from Victor Carreño. 
-![Source: Victor Carreño](figures/scenario1_carreno.png)
+![a](figures/scenario1_carreno.png)
+
+Source: modified from [^1].
 
 Ownship properties:
 - Heading: 90deg, 1 degree standard deviation
@@ -55,13 +56,20 @@ Traffic properties:
 - Altitude: 550 ft
 - Horizontal speed: 137 kt
 
+## Simulation results
+
+### Scenario 1 - no resolution
+
+![scen1_nores](figures/encounter_severity_nores_1.png)
 
 
 ## TODOs
 
-- ~~Add some VRF scenarios as examples~~
-- Get input from sensors, not from object list
-- ~~Tinker with wrapper~~
-- Add support for vertical speed maneuvers
-- Add scenarios w/ climbing maneuvers
+- [x] Add some VRF scenarios as examples
+- [x] Tinger with wrapper
+- [ ] Get input from sensors, not from object list
+- [ ] Add support for vertical speed maneuvers
+- [ ] Add scenarios w/ climbing maneuvers
 
+
+[^1]: Carreño, Victor. Evaluation, Analysis and Results of the  DANTi Flight Test Data, the DAIDALUS  Detect and Avoid Algorithm, and the DANTi Concept for Detect and Avoid in the Cockpit. NASA/CR-20205004594, https://ntrs.nasa.gov/api/citations/20205004594/downloads/NASA-CR-20205004594Corrected%20CY.pdf. 
