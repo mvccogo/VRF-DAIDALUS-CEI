@@ -61,7 +61,9 @@ Traffic properties:
 ### Scenario 1 - no resolution
 
 ![scen1_nores](figures/encounter_severity_nores_1.png)
+### Scenario 1 - instant resolution
 
+![scen1_res](figures/encounter_severity_res_1.png)
 
 
 ## TODOs
