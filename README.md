@@ -74,6 +74,6 @@ Traffic properties:
 - Add support for vertical speed maneuvers
 - Add scenarios w/ climbing maneuvers
 - Add and test wind support
-
+- Add resolution delay parameter
 
 [^1]: Carreño, Victor. Evaluation, Analysis and Results of the  DANTi Flight Test Data, the DAIDALUS  Detect and Avoid Algorithm, and the DANTi Concept for Detect and Avoid in the Cockpit. NASA/CR-20205004594, https://ntrs.nasa.gov/api/citations/20205004594/downloads/NASA-CR-20205004594Corrected%20CY.pdf. 
