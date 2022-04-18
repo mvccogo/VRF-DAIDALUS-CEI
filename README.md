@@ -31,6 +31,19 @@ The Daidalus object is created and initialized for every simulated object. At ev
 1. If the task is a system script, simply save the .lua file. The file can then be accessed directly in VRF_DIR/data/simulationModelSets/EntityLevel/scripts.
 2. If the task is a scenario script, save the scenario. In order to access the file directly (either the script or the metadata), export the script using the context menu.
 
+## Scenarios
+
+All scenarios depicted here originate from "Evaluation, Analysis and Results of the DANTi Flight Test Data, the DAIDALUS Detect and Avoid Algorithm, and the DANTi Concept for Detect and Avoid in the Cockpit". 
+
+
+### Scenario 1
+
+The first scenario is a modified version of Scenario 1 from Victor Carreño. 
+![Source: Victor Carreño](figures/scenario1_carreno.png)
+
+Ownship properties:
+- Heading: 90deg, 1 degree standard deviation
+
 
 
 ## TODOs
