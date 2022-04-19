@@ -29,7 +29,7 @@
 				<item>-1:-1:-1:-1:-1:-1:-1</item>
 			</myEntityTypes>
 			<myVariables>
-				<count>6</count>
+				<count>7</count>
 				<item_version>0</item_version>
 				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
 &lt;!DOCTYPE boost_serialization&gt;
@@ -139,6 +139,24 @@
 	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
 &lt;/DtScriptedTaskVariable&gt;
 </item>
+				<item>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;
+&lt;!DOCTYPE boost_serialization&gt;
+&lt;boost_serialization signature=&quot;serialization::archive&quot; version=&quot;14&quot;&gt;
+&lt;DtScriptedTaskVariable class_id=&quot;0&quot; tracking_level=&quot;0&quot; version=&quot;4&quot;&gt;
+	&lt;myVariableName&gt;resolutionDelay&lt;/myVariableName&gt;
+	&lt;myType&gt;double&lt;/myType&gt;
+	&lt;myLabel&gt;&lt;/myLabel&gt;
+	&lt;myToolTip&gt;&lt;/myToolTip&gt;
+	&lt;myDefaultValue&gt;&lt;/myDefaultValue&gt;
+	&lt;myRangeBottom&gt;0.00000000000000000e+00&lt;/myRangeBottom&gt;
+	&lt;myRangeTop&gt;1.00000000000000000e+02&lt;/myRangeTop&gt;
+	&lt;myVariableData&gt;&lt;/myVariableData&gt;
+	&lt;myVisible&gt;1&lt;/myVisible&gt;
+	&lt;myIndent&gt;0&lt;/myIndent&gt;
+	&lt;myInternal&gt;0&lt;/myInternal&gt;
+	&lt;myScriptedTaskVariableName&gt;&lt;/myScriptedTaskVariableName&gt;
+&lt;/DtScriptedTaskVariable&gt;
+</item>
 			</myVariables>
 			<myScript>-- &gt;&gt;&gt;&gt; Task documentation here &lt;&lt;&lt;&lt;
 
@@ -169,7 +187,7 @@ maneuvering = false
 severity_table = {}
 
 daidalus_on = taskParameters.daidalusOn
-daidalus_delay = 0
+delay_timestamp = -1
 
 
 trafficID = -1
@@ -181,7 +199,7 @@ trafficID = -1
 moving_taskId = -1
 fly_heading_taskid = -1
 
-
+lost_wellclear = false
 
 
 myState = &quot;starting&quot;
@@ -207,7 +225,7 @@ function init()
    --daidalus:setWindVelocityTo(wind_vect:getEast(), wind_vect:getNorth() , -wind_vect:getDown())
    
    -- Set the tick period for this script.
-   vrf:setTickPeriod(0.33)
+   vrf:setTickPeriod(0.5)
    
    -- Check destination 
    if (destination == nil) then
@@ -231,12 +249,6 @@ function tick()
       vrf:endTask(false)
       --vrf:finishTest(0, &quot;Scenario 1 simulation completed.&quot;)
       return
-   end
-   
-   
-   
-   for i,k in pairs(severity_table) do
-      --daidalus:luaExamplePrintMessage(&quot;&quot;..i..&quot;,&quot;..k[1])
    end
    
    -- Add this object to ownship
@@ -271,7 +283,11 @@ function tick()
          if id ~= -1 and id ~= 0 then
             local timeToConflict = daidalus:getDetectionTime(id)
             daidalus:luaExamplePrintMessage(&quot;time to conflict with &quot;..obj:getName()..&quot;: &quot;..timeToConflict)
-            
+            if timeToConflict &lt; 1e-3 then 
+               daidalus:luaExamplePrintMessage(&quot;Lost wellclear...&quot;)
+               lost_wellclear = true
+            end
+         
          end
       end
    end
@@ -292,6 +308,7 @@ function tick()
             vrf:stopSubtask(fly_heading_taskid)
             moving_taskId = vrf:startSubtask(&quot;fly_to_position_and_heading&quot;, params)
             myState = &quot;moving-to-goal&quot;
+            --delay_timestamp = -1
          end
       end
    end
@@ -307,15 +324,18 @@ function tick()
       if(this:isDestroyed() == false) then
          resBands = daidalus:getResolutionDirection()
          if (resBands == resBands) then
-            local params = {
-               allow_task_visualizations = true,
-               heading = math.rad(resBands),
-               use_magnetic = false,
-               turn_rate = math.rad(3)
-            }
-            vrf:stopSubtask(moving_taskId)
-            fly_heading_taskid = vrf:startSubtask(&quot;fly-heading&quot;, params)
-            myState = &quot;avoiding-aircraft&quot;
+            if delay_timestamp == -1 then delay_timestamp = time end
+            if time - delay_timestamp &gt; taskParameters.resolutionDelay then
+               local params = {
+                  allow_task_visualizations = true,
+                  heading = math.rad(resBands),
+                  use_magnetic = false,
+                  turn_rate = math.rad(3)
+               }
+               vrf:stopSubtask(moving_taskId)
+               fly_heading_taskid = vrf:startSubtask(&quot;fly-heading&quot;, params)
+               myState = &quot;avoiding-aircraft&quot;
+            end
          else
             resBands = -1
             if maneuvering ==  true then
@@ -328,6 +348,8 @@ function tick()
    
    if (myState == &quot;avoiding-aircraft&quot;) then
       if (this:isDestroyed() == false) then
+      
+         -- &quot;Wrapper&quot; start
          local CPA = daidalus:isDirectionInConflict(prev_heading, time)
          local new_alerting = -1
          if (CPA &gt; 1e8 or CPA == 0) then
@@ -344,6 +366,8 @@ function tick()
          end
          daidalus:luaExamplePrintMessage(&quot;Setting new alerting time: &quot;..new_alerting..&quot;s&quot;)
          daidalus:setAlertingTime(new_alerting)
+         -- &quot;Wrapper&quot; end
+         
          local timeToConflict = daidalus:isDirectionInConflict(prev_heading, time)
          if (timeToConflict &lt; 1e8) then
             daidalus:luaExamplePrintMessage(&quot;Still in conflict, keep maneuvering...&quot;)
@@ -365,7 +389,11 @@ function calcAndSetSeverity()
       local RangePen = getRangePen(trafficID)
       local HMDPen = getHMDPen(trafficID)
       local VertPen = getVertPen(trafficID)
-      table.insert(severity_table, getSeverity(RangePen, HMDPen, VertPen))
+      if lost_wellclear == false then 
+         table.insert(severity_table, -1)
+      else
+         table.insert(severity_table, getSeverity(RangePen, HMDPen, VertPen))
+      end
       daidalus:luaExamplePrintMessage(&quot;Encounter severity: &quot;..getSeverity(RangePen, HMDPen, VertPen)..&quot;%&quot;)
 end
 
@@ -468,7 +496,9 @@ function writeToFile(file)
    local max_sev = 0
    local current_fuel, total_fuel = this:getResourceAmounts(&quot;movement|fuel&quot;)
    for i,k in pairs(severity_table) do
-      if k &gt; max_sev then
+      if k == -1 then
+         max_sev = -1
+      elseif k &gt; max_sev then
          max_sev = k
       end
    end
