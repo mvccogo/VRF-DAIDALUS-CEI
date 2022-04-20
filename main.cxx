@@ -203,6 +203,8 @@ void DaidalusCEI::bindLuaFunctions(DtLocalObject* entity, const DtString& script
 			luabind::pure_out_value(_2))
 		.def("getModifiedTau", &DaidalusCEI::getModifiedTau,
 			luabind::pure_out_value(_2))
+		.def("isPreferredRight", &DaidalusCEI::isPreferredRight,
+			luabind::pure_out_value(_2))
 		//! The multiple return function requires you to specify which arguments are used to return.
 		//! Here, the indexes start at _2 for the first argument in the function. Our sample function
 		//! has the first out value in the argument slot _3. We also have a second out argument at slot
@@ -229,13 +231,19 @@ static std::string num2str(double res, const std::string& u) {
 	}
 }
 
-void DaidalusCEI::getResolutionDirection(double& trackOrHeading) {
-	if (daa.preferredHorizontalDirectionRightOrLeft()) {
+void DaidalusCEI::getResolutionDirection(double& trackOrHeading, bool is_right) {
+	if (is_right) {
 		trackOrHeading = daa.horizontalDirectionResolution(true, "deg");
+		// If infinite, check the other direction.
+		if (ISINF(trackOrHeading)) trackOrHeading = ISNINF(daa.horizontalDirectionResolution(false, "deg")) ? -1 : daa.horizontalDirectionResolution(false, "deg");
 	}
 	else {
 		trackOrHeading = daa.horizontalDirectionResolution(false, "deg");
+		// If infinite, check the other direction.
+		if (ISNINF(trackOrHeading)) trackOrHeading = ISINF(daa.horizontalDirectionResolution(true, "deg")) ? -1 : daa.horizontalDirectionResolution(true, "deg");
 	}
+	// There is no conflict.
+	if (ISNAN(trackOrHeading)) trackOrHeading = -2;
 }
 
 

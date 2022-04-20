@@ -31,10 +31,12 @@ public:
 
 
 
-	virtual void getResolutionDirection(double& trackOrHeading);
+	virtual void getResolutionDirection(double& trackOrHeading, bool is_right);
 	virtual void setAlertingTime(bool& bUpdated, double time);
 
 	virtual void getAlertingTime(double& time);
+
+	
 
 	virtual void isDirectionInConflict(double& result, double direction, double time);
 
@@ -165,6 +167,12 @@ public:
 	{
 		alt = daa.currentVerticalSeparation(idx);
 		
+	}
+
+
+	inline virtual void isPreferredRight(bool& is_right)
+	{
+		is_right = daa.preferredHorizontalDirectionRightOrLeft();
 	}
 
 	virtual void getHorizontalDirectionBands();
