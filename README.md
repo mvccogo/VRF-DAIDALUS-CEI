@@ -20,7 +20,8 @@ Set the environment variables for VRL and RTI accordingly: MAK_VLRDIR and MAK_RT
 2. Compile the VRF plugin as a dynamic library (included in the solution as a VS project named "VRF-DAIDALUS-CEI")
 3. Launch VRF and create a new plugin entry (this will create the plugin .xml), link it to the .dll file compiled on step 2.
 4. Copy both the .lua file and the .xml file from VRF-scripts to VRF_DIR/data/simulationModelSets/EntityLevel/scripts to add the lua task.
-5. Copy the .conf file from VRF-scripts to VRF_DIR/bin64/ to load DAIDALUS's configuration parameters.
+4.1. Alternatively, import the script package.
+6. Copy the .conf file from VRF-scripts to VRF_DIR/bin64/ to load DAIDALUS's configuration parameters.
 
 ### Using the plugin
 
@@ -75,5 +76,6 @@ Traffic properties:
 - Add scenarios w/ climbing maneuvers
 - Add and test wind support
 - ~~Add resolution delay parameter~~
+- Improve folder/project structure
 
 [^1]: Carreño, Victor. Evaluation, Analysis and Results of the  DANTi Flight Test Data, the DAIDALUS  Detect and Avoid Algorithm, and the DANTi Concept for Detect and Avoid in the Cockpit. NASA/CR-20205004594, https://ntrs.nasa.gov/api/citations/20205004594/downloads/NASA-CR-20205004594Corrected%20CY.pdf. 
