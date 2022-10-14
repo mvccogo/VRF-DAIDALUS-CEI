@@ -26,9 +26,11 @@ maneuvering = false
 
 severity_table = {}
 
-daidalus_on = true
-daidalus_delay = 0
+daidalus_on = taskParameters.daidalusOn
+delay_timestamp = -1
 
+
+trafficID = -1
 -- Possible states:
 -- starting: setting up destination
 -- moving-to-goal: moving to destination
@@ -37,8 +39,9 @@ daidalus_delay = 0
 moving_taskId = -1
 fly_heading_taskid = -1
 
-
-
+lost_wellclear = false
+preferred_direction_set = false
+is_right = false
 
 myState = "starting"
 
@@ -63,7 +66,7 @@ function init()
    --daidalus:setWindVelocityTo(wind_vect:getEast(), wind_vect:getNorth() , -wind_vect:getDown())
    
    -- Set the tick period for this script.
-   vrf:setTickPeriod(0.33)
+   vrf:setTickPeriod(0.5)
    
    -- Check destination 
    if (destination == nil) then
@@ -82,17 +85,11 @@ function tick()
    
    
    -- Check for task completion
-   if myState == "starting" and vrf:isSubtaskComplete(moving_taskId) then
+   if (myState == "starting" or not daidalus_on) and vrf:isSubtaskComplete(moving_taskId) then
       writeToFile("severity.txt")
       vrf:endTask(false)
-      vrf:finishTest(0, "Scenario 1 simulation completed.")
+      --vrf:finishTest(0, "Scenario 1 simulation completed.")
       return
-   end
-   
-   
-   
-   for i,k in pairs(severity_table) do
-      --daidalus:luaExamplePrintMessage(""..i..","..k[1])
    end
    
    -- Add this object to ownship
@@ -104,7 +101,7 @@ function tick()
    
    local objs = vrf:getVrfObjects()
  
-   -- Iterate over all simulated objects, add their traffic states.
+   -- Iterate over all aerial simulated objects, add their traffic states.
    for i, obj in ipairs(objs) do
       if obj:isValid() == true then
          local type = obj:getEntityType()
@@ -112,7 +109,7 @@ function tick()
          if type == "2" and this:getUUID() ~= obj:getUUID() then
             local loc3d_obj = obj:getLocation3D()
             local vel_obj = obj:getVelocity3D()
-            local id = daidalus:addTrafficState(obj:getName(), loc3d_obj:getLat(), loc3d_obj:getLon(), loc3d_obj:getAlt(), vel_obj:getEast(), vel_obj:getNorth(), -vel_obj:getDown(), -1)  
+            trafficID = daidalus:addTrafficState(obj:getName(), loc3d_obj:getLat(), loc3d_obj:getLon(), loc3d_obj:getAlt(), vel_obj:getEast(), vel_obj:getNorth(), -vel_obj:getDown(), -1)  
             end
       
       end
@@ -126,8 +123,10 @@ function tick()
          local id = daidalus:aircraftIndex(obj:getName())
          if id ~= -1 and id ~= 0 then
             local timeToConflict = daidalus:getDetectionTime(id)
-            daidalus:luaExamplePrintMessage("time to conflict with "..obj:getName()..": "..timeToConflict)
-            
+            if timeToConflict < 1e-3 then 
+               lost_wellclear = true
+            end
+         
          end
       end
    end
@@ -137,17 +136,24 @@ function tick()
       if (this:isDestroyed() == false) and (destination ~= nil) then
       local params = {
             position = taskParameters.position,
-            keepAltitude = 0,
+            keepAltitude = 1,
             altitude = taskParameters.altitude,
             heading = taskParameters.finalHeading,
-            keepSpeed = 0,
-            speed = taskParameters.cruiseSpeed,
+            keepSpeed = 1,
+            speed = this:getOrderedSpeed(),
             lateralAcceleration = 1}
          
          if not vrf:isSubtaskRunning(moving_taskId) then
             vrf:stopSubtask(fly_heading_taskid)
-            moving_taskId = vrf:startSubtask("fly_to_position_and_heading", params)
+            if taskParameters.isFixedWing == true then
+               moving_taskId = vrf:startSubtask("fly_to_position_and_heading", params)
+            else
+               local pos = taskParameters.position
+               --local pos_with_altitude = pos:setAlt(taskParameters.altitude)
+               moving_taskId = vrf:startSubtask("move-to-location", {aiming_point = pos, speed = this:getOrderedSpeed()})
+            end
             myState = "moving-to-goal"
+            --delay_timestamp = -1
          end
       end
    end
@@ -161,19 +167,31 @@ function tick()
    
    if (myState == "moving-to-goal" and daidalus_on == true) then
       if(this:isDestroyed() == false) then
-         resBands = daidalus:getResolutionDirection()
-         if (resBands == resBands) then
-            local params = {
-               allow_task_visualizations = true,
-               heading = math.rad(resBands),
-               use_magnetic = false,
-               turn_rate = math.rad(3)
-            }
-            vrf:stopSubtask(moving_taskId)
-            fly_heading_taskid = vrf:startSubtask("fly-heading", params)
-            myState = "avoiding-aircraft"
-         else
+         if not preferred_direction_set then
+            preferred_direction_set = true
+            is_right = daidalus:isPreferredRight()
+         end
+         resBands = daidalus:getResolutionDirection(is_right)
+         if (resBands == -2) then
+            -- No conflict.
             resBands = -1
+         end
+         if (resBands ~= -1) then
+            -- Resolution maneuver was found, apply it after the delay.
+            if delay_timestamp == -1 then delay_timestamp = time end
+            if time - delay_timestamp > taskParameters.resolutionDelay then
+               local params = {
+                  allow_task_visualizations = true,
+                  heading = math.rad(resBands),
+                  use_magnetic = false,
+                  turn_rate = math.rad(12)
+               }
+               vrf:stopSubtask(moving_taskId)
+               fly_heading_taskid = vrf:startSubtask("fly-heading", params)
+               myState = "avoiding-aircraft"
+            end
+         else 
+            -- todo: remove this if check, no longer needed.
             if maneuvering ==  true then
                myState = "avoiding-aircraft"
             end
@@ -182,8 +200,18 @@ function tick()
       
    end
    
+   
+   if resBands == -1 then
+      daidalus:luaExamplePrintMessage("Aircraft not in conflict")
+   else
+      daidalus:luaExamplePrintMessage("Resolution maneuver for current conflict:"..resBands)
+   end
+   
+   
    if (myState == "avoiding-aircraft") then
       if (this:isDestroyed() == false) then
+      
+         -- "Wrapper" start
          local CPA = daidalus:isDirectionInConflict(prev_heading, time)
          local new_alerting = -1
          if (CPA > 1e8 or CPA == 0) then
@@ -198,34 +226,35 @@ function tick()
                new_alerting = daidalus:getAlertingTime()
             end
          end
-         daidalus:luaExamplePrintMessage("Setting new alerting time: "..new_alerting.."s")
          daidalus:setAlertingTime(new_alerting)
+         -- "Wrapper" end
+         
          local timeToConflict = daidalus:isDirectionInConflict(prev_heading, time)
          if (timeToConflict < 1e8) then
-            daidalus:luaExamplePrintMessage("Still in conflict, keep maneuvering...")
             myState = "moving-to-goal"
             maneuvering = true
+            daidalus:luaExamplePrintMessage("Original heading still has conflicts, keep maneuvering around them. (Time2Conflict:"..timeToConflict)
          else
-            daidalus:luaExamplePrintMessage("Not in conflict, restart navigation")
+            daidalus:luaExamplePrintMessage("Original heading has no conflicts, resume navigation")
             myState = "starting"
          end
       end
    end
    
-   
+   --daidalus:getHorizontalDirectionBands()
    calcAndSetSeverity()
 end
 
 
 function calcAndSetSeverity()
-      local RangePen = getRangePen(1)
-      daidalus:luaExamplePrintMessage("RangePen: "..RangePen)
-      local HMDPen = getHMDPen(1)
-      daidalus:luaExamplePrintMessage("HMDPen: "..HMDPen)
-      local VertPen = getVertPen(1)
-      daidalus:luaExamplePrintMessage("VertPen: "..VertPen)
-      table.insert(severity_table, getSeverity(RangePen, HMDPen, VertPen))
-      daidalus:luaExamplePrintMessage("severity: "..getSeverity(RangePen, HMDPen, VertPen))
+      local RangePen = getRangePen(trafficID)
+      local HMDPen = getHMDPen(trafficID)
+      local VertPen = getVertPen(trafficID)
+      if lost_wellclear == false then 
+         table.insert(severity_table, -1)
+      else
+         table.insert(severity_table, getSeverity(RangePen, HMDPen, VertPen))
+      end
 end
 
 
@@ -275,35 +304,30 @@ end
 function getRangePen(idx)
    r_i = daidalus:getHorizontalDistance(idx)
    rdot_i = daidalus:getClosureRate(true, idx)
-   local DTHR = 656.168
-   local taumod = 20
-   local b = 0.5*math.sqrt((rdot_i * taumod)*(rdot_i * taumod) + 4*DTHR*DTHR) - rdot_i*taumod
+   --rdot_i = math.abs(rdot_i)
+   local DTHR = 180 -- Meters
+   local taumod = 0
+   local taumod_test = daidalus:getModifiedTau(DTHR,idx)
+   --taumod = taumod_test
+   local b = 0.5*math.sqrt((rdot_i * taumod)^2 + 4*DTHR^2) - rdot_i*taumod
    local S_i = math.max(DTHR, b)
    return math.min(r_i/S_i, 1)
+  
 end
 
 
 -- Horizontal Miss-distance Projection (HMD)
 
 function getHMDPen(idx)
-   r_i = daidalus:getHorizontalDistance(idx)
-   dx, dy, vrx, vry = daidalus:getHorizontalMissDistanceParams(idx)
-   local t_CPA = (-dx*vrx+dy*vrx)/(vrx*vrx + vry*vry)
-   local DTHR = 656.168
-   local HMD_i
-   if t_CPA > 0 then
-   HMD_i = math.sqrt((dx + vrx*t_CPA)*(dx + vrx*t_CPA) + (dy + vry*t_CPA)*(dy + vry*t_CPA))   
-   else
-   HMD_i = r_i
-   end
-   return math.min(HMD_i/DTHR, 1)
+   local DTHR = 180
+   return math.min(daidalus:getHMD(idx)/DTHR, 1)
 end
 
--- Vertical Distance 
+-- Vertical Distance
 
 function getVertPen(idx)
    local dh_i = daidalus:getRelativeAltitude(idx)
-   local ZTHR = 450
+   local ZTHR = 91
    return math.min(dh_i/ZTHR, 1)
 end
 
@@ -311,30 +335,34 @@ end
 -- Norm operator
 
 function norm(a,b)
-   return math.sqrt(a*a + b*b - a*a*b*b)
+   return ((a*a) + (b*b) - (a*a*b*b))^0.5
 end
 
 -- Severity calculation
 
 function getSeverity(RangePen, HMDPen, VertPen)
+   local a = norm(RangePen,HMDPen)
+   local b = norm(a, VertPen)
    SLoWC_i = (1 - norm(norm(RangePen,HMDPen), VertPen)) * 100
    return SLoWC_i
 end
 
 -- Write severity to file
 function writeToFile(file)
-   local file = io.open("C:\\Users\\matheusmc\\Documents\\GitHub\\VRF-DAIDALUS-CEI\\VRF-DAIDALUS-CEI\\VRF-scripts\\Scenario1\\"..file, "a")
+   local file = io.open("C:\\Users\\matheusmc\\Documents\\GitHub\\VRF-DAIDALUS-CEI\\VRF-DAIDALUS-CEI\\VRF-scripts\\Scenario4\\"..file, "a")
    io.output(file)
    
    local max_sev = 0
-   
+   local current_fuel, total_fuel = this:getResourceAmounts("movement|fuel")
    for i,k in pairs(severity_table) do
-      if k > max_sev then
+      if k == -1 then
+         max_sev = -1
+      elseif k > max_sev then
          max_sev = k
       end
    end
    
-   io.write(max_sev.."\n")
+   io.write(max_sev..","..(total_fuel-current_fuel).."\n")
    
    io.close(file)
 end
